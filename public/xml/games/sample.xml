@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<game>
+  <!-- Use this when working on a new game. Use ?admin=true to show the game -->
+  <hidden /> <!-- Remove this line to show game -->
+  <title>Title of the Game</title>
+  <description>
+    Describe your game
+  </description>
+  <!-- Chose which tags apply to your game -->
+  <tags>
+    <game />
+    <!-- <puzzle /> -->
+    <two-player />
+    <dartboard />
+    <!-- <gravity /> -->
+    <!-- <sliding /> -->
+    <!-- <capture /> -->
+    <!-- <solved /> -->
+  </tags>
+</game>
