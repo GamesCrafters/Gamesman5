@@ -1,3 +1,3 @@
-require './app/controllers/index_controller.rb'
+require './gamesman.rb'
 
 run Sinatra::Application
