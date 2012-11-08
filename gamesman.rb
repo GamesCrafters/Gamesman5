@@ -10,6 +10,10 @@ class Game < Sinatra::Base
   get '/game/:name/new' do
     erb :new
   end
+
+  get '/game/:name/play' do
+    erb :play
+  end
 end
 
 class CoffeeEngine < Sinatra::Base
