@@ -1,0 +1,63 @@
+<% content_for :head do %>
+<link rel="stylesheet" href="stylesheets/foundation.min.css">
+<link rel="stylesheet" href="stylesheets/app.css">
+
+<script src="javascripts/modernizr.foundation.js"></script>
+<% end %>
+
+<div class="row">
+  <div class="twelve columns">
+    <div class="panel">
+    <h1>Games</h1>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="nine columns push-three">
+    <% @games.each do |resource, parts| %>
+      <%
+      game_name = parts[0]
+      description = parts[1]
+      tags = parts[2]
+      %>
+      <div class="row">
+        <div class="three columns mobile-two">
+          <img src="images/<%= resource %>.png" />
+        </div>
+        <div class="nine columns mobile-two">
+          <p>
+            <h5>
+              <a class="nostyle"
+                 href="/game/<%= resource %>/new"><%= game_name %></a>
+            </h5>
+            <%= description %>
+          </p>
+        </div>
+        <div class="seven columns mobile-four">
+          <ul class="link-list">
+            <% tags.each do |name| %>
+              <li><a href=""><img src="images/<%= name %>.png" /></a></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <hr />
+    <% end %>
+  </div>
+
+  <div class="three columns pull-nine">
+    <div class="panel">
+      <a href="#"><img src="http://placehold.it/300x240&text=[Dan Garcia]" /></a>
+      <h5><a href="#">Your Name</a></h5>
+      <dl class="vertical tabs">
+        <dd class="active"><a href="#">Games</a></dd>
+        <dd><a href="#">Puzzles</a></dd>
+        <dd><a href="#">Section 3</a></dd>
+        <dd><a href="#">Section 4</a></dd>
+        <dd><a href="#">Section 5</a></dd>
+        <dd><a href="#">Section 6</a></dd>
+      </dl>
+    </div>
+  </div>
+</div>
