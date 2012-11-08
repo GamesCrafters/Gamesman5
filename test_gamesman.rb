@@ -1,4 +1,4 @@
-require 'gamesman'
+require './gamesman'
 require 'test/unit'
 require 'rack/test'
 
