@@ -13,5 +13,6 @@ class HelloWorldTest < Test::Unit::TestCase
 
   def test_true
     assert true
+    assert true
   end
 end

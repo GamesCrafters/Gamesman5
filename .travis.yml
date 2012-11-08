@@ -1,1 +1,1 @@
-script: bundle exec ruby test_gamesman.rb
+script: rake test
