@@ -1,3 +1,3 @@
-require 'gamesman'
+require './gamesman'
 
 run Gamesman
