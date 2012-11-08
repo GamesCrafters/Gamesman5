@@ -13,10 +13,19 @@ class Game < Sinatra::Base
 end
 
 class CoffeeEngine < Sinatra::Base
-  set :views, File.dirname(__FILE__) + '/assets/javascripts/games'
+  set :views, File.dirname(__FILE__) + '/assets/javascripts/'
 
-  get '/javascripts/games/*.js' do
-    coffee params[:splat].first.to_sym
+  def render_js (name)
+    Dir.glob(settings.views + name + "*") do |file|
+      if file.end_with?("coffee")
+        return coffee file[settings.views.length..-1].chomp(".coffee").to_sym
+      end
+    end
+    File.read(File.join(settings.views, name + '.js'))
+  end
+
+  get '/javascripts/*.js' do
+    render_js params[:splat].first
   end
 end
 
