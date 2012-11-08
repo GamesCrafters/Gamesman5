@@ -49,7 +49,7 @@ window.GCAPI.Game = class Game
                 notifier(data.response, @)
               else
                 notifier(data, @)
-  
+
   undo: () ->
     if @previousBoards.length > 0
       @nextBoards.push(@currentBoard)

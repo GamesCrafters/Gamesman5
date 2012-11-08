@@ -11,10 +11,10 @@ $ = jQuery
 
 $.fn.extend
   getConfigure: (options) ->
-    settings = 
+    settings =
       debug: false
 
-    settings = $.extend settings, options 
+    settings = $.extend settings, options
 
     log = (msg) ->
       console?.log msg if settings.debug
@@ -25,23 +25,37 @@ $.fn.extend
     makeRange = (n,i) ->
       v = i.values
       description = i.desc
-      retval = description + ": "
-      retval += "<select name='" + n + "' >"
+      retval = ''
+      retval += '<div class="three columns end">'
+      retval += description
+      retval += "<select id='custom" + n + "' name='" + n + "' >"
       for value in i.values
         retval += "<option value='" + value + "'>" + value + "</option>"
-      retval += "</select><br />"
+      retval += "</select>"
+      retval += "</div>"
       return retval
 
     makeInput = () ->
       retval = ""
       return retval
 
-    contents = "<form action='play'>"
+    contents = "<form action='play' class='custom'>"
+    contents += '<fieldset>'
+    contents += '<legend>Player Info</legend>'
+    contents += '<div class="row">'
+    contents += "<div class='six columns'>"
+    contents += "<input type='text' name='player1' placeholder='Player 1 Name' /></div>"
+    contents += "<div class='six columns'>"
+    contents += "<input type='text' name='player2' placeholder='Player 2 Name' /></div>"
+    contents += '</fieldset></div>'
+    contents += '<fieldset>'
+    contents += '<legend>Game Info</legend>'
     for own name,info of settings
       if typeof info is "object"
         switch info.type
           when "integer" then contents += makeRange name,info
-    contents += "<input type='submit' />"
+    contents += "</fieldset>"
+    contents += '<input class="button" type="submit" value="Let\'s Play!" />'
     contents += "</form>"
 
     c.html contents

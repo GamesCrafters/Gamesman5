@@ -1,5 +1,11 @@
 <% content_for :head do %>
+<link rel="stylesheet" href="/stylesheets/foundation.min.css">
+<link rel="stylesheet" href="/stylesheets/app.css">
+
 <script src="/javascripts/jquery-1.8.2.min.js"></script>
+
+<script src="/javascripts/modernizr.foundation.js"></script>
+
 <script src="/javascripts/config.js"></script>
 <script src="/javascripts/GCAPI.js"></script>
 <script src="/javascripts/games/<%= params[:name] %>.js"></script>
@@ -8,10 +14,24 @@
     if (ensureConfigParameters()) {
       $('#game-title').text(game.title);
       $('#game-config').getConfigure(game.parameters);
+      $(this).foundationCustomForms();
     }
   });
 </script>
 <% end %>
-<h1 id="game-title"></h1>
-<div id="game-config">
+<div class="row">
+  <div class="twelve columns">
+    <div class="panel">
+      <h1 id="game-title"></h1>
+    </div>
+  </div>
 </div>
+
+<div class="row">
+  <div class="twelve columns">
+    <div id="game-config" class="twelve columns">
+    </div>
+  </div>
+</div>
+
+<script src="/javascripts/jquery.foundation.forms.js"></script>
