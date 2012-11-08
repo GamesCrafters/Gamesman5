@@ -1,0 +1,14 @@
+<% content_for :head do %>
+<script src="/javascripts/games/<%= params[:name] %>.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    if (ensureConfigParameters()) {
+      $('#game-title').text(game.title);
+      $('#game-config').getConfigure(game.parameters);
+    }
+  });
+</script>
+<% end %>
+<h1 id="game-title"></h1>
+<div id="game-config">
+</div>

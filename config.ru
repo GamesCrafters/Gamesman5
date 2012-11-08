@@ -1,3 +1,3 @@
-require './gamesman.rb'
+require 'gamesman'
 
-run Sinatra::Application
+run Gamesman
