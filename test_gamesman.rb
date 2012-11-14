@@ -4,7 +4,7 @@ require 'rack/test'
 
 ENV['RACK_ENV'] = 'test'
 
-class HelloWorldTest < Test::Unit::TestCase
+class GamesmanTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
