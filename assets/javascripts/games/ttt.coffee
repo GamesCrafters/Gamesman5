@@ -12,6 +12,7 @@ window.game.parameters = {
   height: { type: "integer", values: [3,4,5], desc: "Board Height" },
   pieces: { type: "integer", values: [3,4,5], desc: "Number in a row" },
 }
+
 window.game.getInitialBoard = (p) ->
   retval = ""
   for a in [1..p.width]
@@ -19,8 +20,12 @@ window.game.getInitialBoard = (p) ->
       retval += " "
   return retval
 
+window.game.getDimensions = (p) ->
+  return [p.width, p.height]
+
 window.game.notifier = class extends GCAPI.GameNotifier
   drawBoard: (board, game) ->
+    console.log board
     me = this
     x_pixels = Math.floor (@canvas.width() / @conf.width)
     y_pixels = Math.floor (@canvas.height() / @conf.height)
@@ -30,9 +35,10 @@ window.game.notifier = class extends GCAPI.GameNotifier
     ypos = 0
     for row in [0..@conf.height-1]
       xpos = 0
-      start = row*@conf.height
+      start = row*@conf.width
       for column in [0..@conf.width-1]
         index = start + column
+        console.log index
         char = board[index]
         color = "#FFF"
         if char == "X"
