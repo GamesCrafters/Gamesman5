@@ -26,7 +26,7 @@ class CoffeeEngine < Sinatra::Base
         return coffee file[settings.views.length..-1].chomp(".coffee").to_sym
       end
     end
-    File.read(File.join(settings.views, name + '.js'))
+    File.open(File.join(settings.views, name + '.js')).read()
   end
 
   get '/javascripts/*.js' do
@@ -58,8 +58,6 @@ class Gamesman < Sinatra::Base
       tags = []
       game.find_first('//game/tags').children.each do |child|
         if child.name != 'text' && !child.name.nil? && !child.name.empty?
-          puts child
-          puts child.name
           tags << child.name
         end
       end

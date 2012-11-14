@@ -10,6 +10,16 @@ window.GCAPI.GameNotifier = class
     alert("GameNotifier must implement drawMoves")
   setShowMoveValues: (@showMoveValues) ->
 
+reduce = (num, denom) ->
+  gcd = (a, b) ->
+    return if b then gcd(b, a%b) else a
+  d = gcd(num, denom)
+  return [num / d, denom / d]
+
+window.GCAPI.getAspectRatio = (p) ->
+  dim = game.getDimensions(p)
+  return reduce(dim[0], dim[1])
+
 window.GCAPI.Game = class Game
   constructor: (name, parameters, notifierClass, board) ->
     @gameName = name
