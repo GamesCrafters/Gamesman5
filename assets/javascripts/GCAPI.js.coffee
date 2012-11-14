@@ -77,6 +77,7 @@ window.GCAPI.Game = class Game
 
   makeMove: (move) ->
     @previousBoards.push(@currentBoard)
+    @nextBoards = []
     @currentBoard = move.board
     @updateBoard()
 

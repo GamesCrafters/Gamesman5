@@ -4,20 +4,23 @@ $ = jQuery
 
 $.fn.extend
   startGame: (params) ->
-    window.mainCanvas = this
+    this.html("<canvas id='GCAPI-main' /><canvas id='GCAPI-control' />")
+    window.mainCanvas = document.getElementById('GCAPI-main')
+    window.controlPanel = document.getElementById('GCAPI-control')
+    $(mainCanvas).css('display', 'block')
+    $(mainCanvas).css('position', 'absolute')
+    $(controlPanel).css('display', 'block')
+    $(controlPanel).css('position', 'absolute')
+    $(controlPanel).css('left', '0px')
+    $(this).css('width', window.innerWidth)
+    $(this).css('height', window.innerHeight)
     console.log GCAPI.getAspectRatio(params)
-    canvas = $(this).get()[0]
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-    $(window).resize ->
-      canvas = $(window.mainCanvas).get()[0]
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      gameController.updateBoard()
     initialBoard = game.getInitialBoard(params)
-    notify = new game.notifier(this, params)
+    notify = new game.notifier($(mainCanvas), params)
     window.gameController = new GCAPI.Game(game.asset, params, notify, initialBoard)
-    window.uiController = new GCAPI.Ui(gameController, this)
+    window.uiController = new GCAPI.Ui(gameController, mainCanvas,
+                                       controlPanel, this, 
+                                       GCAPI.getAspectRatio(params))
     uiController.startGame()
 
 window.ensureGameFunctions = () ->

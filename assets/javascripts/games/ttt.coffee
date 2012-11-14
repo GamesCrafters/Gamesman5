@@ -25,7 +25,6 @@ window.game.getDimensions = (p) ->
 
 window.game.notifier = class extends GCAPI.GameNotifier
   drawBoard: (board, game) ->
-    console.log board
     me = this
     x_pixels = Math.floor (@canvas.width() / @conf.width)
     y_pixels = Math.floor (@canvas.height() / @conf.height)
@@ -38,7 +37,6 @@ window.game.notifier = class extends GCAPI.GameNotifier
       start = row*@conf.width
       for column in [0..@conf.width-1]
         index = start + column
-        console.log index
         char = board[index]
         color = "#FFF"
         if char == "X"
