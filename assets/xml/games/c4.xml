@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<game>
+  <hidden />
+  <title>Connect 4</title>
+  <description>
+    When you connect 4 things. a 4 connection has been made
+  </description>
+  <tags>
+    <game />
+    <two-player />
+    <gravity />
+     <solved />
+  </tags>
+</game>

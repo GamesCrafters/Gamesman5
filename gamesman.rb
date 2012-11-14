@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/content_for'
 
 require 'xml'
+require 'json'
 require 'coffee-script'
 
 class Game < Sinatra::Base
@@ -12,7 +13,7 @@ class Game < Sinatra::Base
   end
 
   get '/game/:name/play' do
-    erb :play
+    erb :play2
   end
 end
 

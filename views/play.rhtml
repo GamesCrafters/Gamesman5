@@ -1,10 +1,12 @@
 <% content_for :head do %>
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="jquery.min.js"></script>
 <meta name="author" content="Sung Roa Yoon" />
 <meta name="description" content="Version 1.3" />
 <style type="text/css">
 body {
 margin: 0;
-        background-image:url('background.png');
+        background-image:url('/images/background.png');
         background-size:100% 100%;
 width: window.innerWidth;
 height: window.innerHeight;
@@ -246,14 +248,14 @@ function barClass(string, barPercent, minValue, maxValue, xLocRatio, yLocRatio) 
 /**
   These are the eight buttons that will be on the side.
  */
-undoButton = new buttonClass(0, "undo@2x.png");
-redoButton = new buttonClass(1, "redo@2x.png");
-playerSettingsButton = new buttonClass(2, "players@2x.png");
-vvhistButton = new buttonClass(3, "vvh@2x.png");
-variantsButton = new buttonClass(4, "variants@2x.png");
-mvhistButton = new buttonClass(5, "values@2x.png");
-genSettingsButton = new buttonClass(6, "settings@2x.png");
-homeButton = new buttonClass(7, "home@2x.png");
+undoButton = new buttonClass(0, "/images/undo@2x.png");
+redoButton = new buttonClass(1, "/images/redo@2x.png");
+playerSettingsButton = new buttonClass(2, "/images/players@2x.png");
+vvhistButton = new buttonClass(3, "/images/vvh@2x.png");
+variantsButton = new buttonClass(4, "/images/variants@2x.png");
+mvhistButton = new buttonClass(5, "/images/values@2x.png");
+genSettingsButton = new buttonClass(6, "/images/settings@2x.png");
+homeButton = new buttonClass(7, "/images/home@2x.png");
 
 /**
   These are the functions that the buttons will have upon being clicked in the options canvas.

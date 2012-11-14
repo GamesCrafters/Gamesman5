@@ -4,11 +4,12 @@ $ = jQuery
 
 $.fn.extend
   startGame: (params) ->
-    canvas = document.getElementById('game-canvas')
+    window.mainCanvas = this
+    canvas = $(this).get()[0]
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
     $(window).resize ->
-      canvas = document.getElementById('game-canvas')
+      canvas = $(window.mainCanvas).get()[0]
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
       gameController.updateBoard()
