@@ -41,7 +41,7 @@ class Gamesman < Sinatra::Base
 
   get '/' do
     @games = {}
-    Dir.glob("public/xml/games/*.xml") do |file|
+    Dir.glob("assets/xml/games/*.xml") do |file|
       parts = file.split('/')
       asset_name = parts[-1].split('.')[0]
 

@@ -1,13 +1,13 @@
-window.game or= {}
+window.game || (window.game = {});
 
-window.game.title = "Nine Mens Morris"
-window.game.asset = "nmm"
-window.game.description = "This is Nine Mens Morris"
+window.game.title = "Nine Mens Morris";
+window.game.asset = "nmm";
+window.game.description = "This is Nine Mens Morris";
 window.game.parameters = {
   width: { type: "integer", values: [3,4,5], desc: "Board Width" },
   height: { type: "integer", values: [3,4,5], desc: "Board Height" },
-  pieces: { type: "integer", values: [3,4,5], desc: "Number in a row" },
-}
+  pieces: { type: "integer", values: [3,4,5], desc: "Number in a row" }
+};
 
 
 // sizes and tolerances
@@ -1301,17 +1301,5 @@ NMMNotify.prototype.drawMoves = function(data){
     game.undo()
   }
 }
-var notifier = null
-var game = null
-var canvas = null
-function loadBoard(){
-  //canvas = document.getElementById('gameInterface');
-  //notifier = new NMMNotify(canvas)
-  //game = new Game(gameName, {
-  //  width: 3,
-  //  height: 3,
-  //  pieces: 3
-  //}, notifier, "         ");
-  //game.startGame()
-  sizeUpdate();
-}
+
+window.game.notifier = NMMNotify
