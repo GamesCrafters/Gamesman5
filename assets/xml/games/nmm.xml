@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<game>
+  <title>Nine Mens Morris</title>
+  <description>
+    Tic Tac Toe is a basic game involving some things. These things are
+    important and will play an important role in things.
+  </description>
+  <tags>
+    <two-player />
+    <dartboard />
+    <solved />
+    <play />
+  </tags>
+</game>
