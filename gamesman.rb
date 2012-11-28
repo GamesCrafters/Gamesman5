@@ -13,6 +13,7 @@ class Game < Sinatra::Base
   end
 
   get '/game/:name/play' do
+    response.headers['Access-Control-Allow-Origin'] = '*'
     erb :play2
   end
 end
