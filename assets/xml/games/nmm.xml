@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <game>
+  <hidden />
   <title>Nine Mens Morris</title>
   <description>
     Tic Tac Toe is a basic game involving some things. These things are
