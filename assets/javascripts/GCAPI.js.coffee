@@ -50,15 +50,16 @@ window.GCAPI.Game = class Game
 
   getPossibleMoves: (board, notifier) ->
     requestUrl = @baseUrl + @gameName + "/getNextMoveValues" + @getUrlTail(board)
+    me = @
 
     $.ajax requestUrl,
             dataType: "json"
             success: (data) ->
               retval = []
               if data.status == "ok"
-                notifier(data.response, @)
+                notifier(data.response, me)
               else
-                notifier(data, @)
+                notifier(data, me)
 
   undo: () ->
     if @previousBoards.length > 0
