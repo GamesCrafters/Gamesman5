@@ -27,7 +27,7 @@ window.GCAPI.Ui = class
     $(@canvas).css('left', (window.innerWidth / 2) - (@canvas.width / 2))
     @game.updateBoard()
 
-  resizeVVH: -> 
+  resizeVVH: ->
     h = window.innerHeight / 1.2
     w = h / 2
     left = (h / 5.7) - 1
