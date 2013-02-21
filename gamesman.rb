@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/content_for'
+require 'sinatra/assetpack'
 
 require 'xml'
 require 'json'
@@ -7,6 +8,20 @@ require 'coffee-script'
 
 class Game < Sinatra::Base
   helpers Sinatra::ContentFor
+  register Sinatra::AssetPack
+
+  assets do
+    serve '/js', :from => '/assets/javascripts'
+    serve '/javascripts', :from => '/assets/javascripts/vendor'
+    serve '/css', :from => '/assets/stylesheets'
+
+    js :app, [ '/javascripts/jquery-1.8.2.min.js', '/javascripts/modernizr.foundation.js' ]
+    js :config, [ '/js/config.js', '/js/GCAPI.js' ]
+    js :play, [ '/javascripts/jcanvas.min.js', '/js/play.js', '/js/GCAPI.js',
+                '/js/ui.js' ]
+
+    css :app, [ '/css/app.css', '/css/foundation.min.css' ]
+  end
 
   get '/game/:name/new' do
     erb :new
@@ -36,7 +51,7 @@ class CoffeeEngine < Sinatra::Base
 end
 
 class Gamesman < Sinatra::Base
-  use CoffeeEngine
+  #use CoffeeEngine
   use Game
   helpers Sinatra::ContentFor
 

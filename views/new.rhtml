@@ -1,14 +1,8 @@
 <% content_for :head do %>
-<link rel="stylesheet" href="/stylesheets/foundation.min.css">
-<link rel="stylesheet" href="/stylesheets/app.css">
-
-<script src="/javascripts/jquery-1.8.2.min.js"></script>
-
-<script src="/javascripts/modernizr.foundation.js"></script>
-
-<script src="/javascripts/config.js"></script>
-<script src="/javascripts/GCAPI.js"></script>
-<script src="/javascripts/games/<%= params[:name] %>.js"></script>
+<%= css :app %>
+<%= js :app %>
+<%= js :config %>
+<script type="text/javascript" src="/js/games/<%= params[:name] %>.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     if (ensureConfigParameters()) {
