@@ -1,11 +1,6 @@
-require './gamesman'
 require 'spec_helper'
-require 'capybara/rspec'
 
 describe "Gamesman" do
-  include Capybara::DSL
-  Capybara.app = Gamesman.new
-
   def app
     Gamesman
   end
