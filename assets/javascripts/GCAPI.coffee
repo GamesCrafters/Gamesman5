@@ -87,13 +87,13 @@ window.GCAPI.Game = class Game
     @updateBoard()
 
   makeMove: (move) ->
-    $(@coverCanvas).show()
     @previousBoards.push(@currentBoard)
     @nextBoards = []
     @currentBoard = move.board
     @updateBoard()
 
   updateBoard: () ->
+    $(@coverCanvas).show()
     @notifier.drawBoard(@currentBoard, @)
     @getPossibleMoves(@currentBoard, @notifier.drawMoves)
 
