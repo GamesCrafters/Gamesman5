@@ -17,7 +17,6 @@ $.fn.extend
     $(vvhPanel).css('position', 'absolute')
     $(this).css('width', window.innerWidth)
     $(this).css('height', window.innerHeight)
-    console.log GCAPI.getAspectRatio(params)
     initialBoard = game.getInitialBoard(params)
     notify = new game.notifier($(mainCanvas), params)
     window.gameController = new GCAPI.Game(game.asset, params, notify, initialBoard)

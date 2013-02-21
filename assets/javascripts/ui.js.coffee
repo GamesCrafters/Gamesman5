@@ -53,8 +53,6 @@ window.GCAPI.Ui = class
     @controlPanel.height = h
     $(@controlPanel).css('top', (window.innerHeight / 2) - (h / 2))
 
-    console.log "redrawing control panel"
-
     $(@controlPanel).drawRect
       layer: true
       fillStyle: "#000"
