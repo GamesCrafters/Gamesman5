@@ -28,8 +28,6 @@ window.game.notifier = class extends GCAPI.GameNotifier
     me = this
     x_pixels = Math.floor (@canvas.width() / @conf.width)
     y_pixels = Math.floor (@canvas.height() / @conf.height)
-    console?.log x_pixels
-    console?.log y_pixels
     xpos = 0
     ypos = 0
     for row in [0..@conf.height-1]
@@ -66,13 +64,16 @@ window.game.notifier = class extends GCAPI.GameNotifier
     window.moves = {}
     for move in data
       window.moves[move.move] = move
-      val = move.value
-      if val == 'lose'
-        color = "#8B0000"
-      else if val == 'win'
-        color = "#0F0"
-      else
-        color = "#FF0"
+      color = "#FFF"
+
+      if game.showValueMoves
+        val = move.value
+        if val == 'lose'
+          color = "#8B0000"
+        else if val == 'win'
+          color = "#0F0"
+        else
+          color = "#FF0"
 
       column = move.move.charCodeAt(0) - 65
       row = move.move[1] - 1

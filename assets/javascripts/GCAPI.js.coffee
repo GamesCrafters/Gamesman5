@@ -29,6 +29,7 @@ window.GCAPI.Game = class Game
     @nextBoards = []
     @currentBoard = board
     @baseUrl = "http://nyc.cs.berkeley.edu:8080/gcweb/service/gamesman/puzzles/"
+    @showValueMoves = false
 
   setDrawProcedure: (draw) ->
     @draw = draw
@@ -58,17 +59,25 @@ window.GCAPI.Game = class Game
               retval = []
               if data.status == "ok"
                 notifier(data.response, me)
+                if data.response.length == 0
+                  alert("Game Over!")
               else
                 notifier(data, me)
 
+  canUndo: () ->
+    @previousBoards.length > 0
+
   undo: () ->
-    if @previousBoards.length > 0
+    if @canUndo()
       @nextBoards.push(@currentBoard)
       @currentBoard = @previousBoards.pop()
       @updateBoard()
 
+  canRedo: () ->
+    @nextBoards.length > 0
+
   redo: () ->
-    if @nextBoards.length > 0
+    if @canRedo()
       @previousBoards.push(@currentBoard)
       @currentBoard = @nextBoards.pop()
       @updateBoard()
@@ -88,3 +97,7 @@ window.GCAPI.Game = class Game
 
   getNotifier: () ->
     @notifier
+
+  toggleValueMoves: () ->
+    @showValueMoves = !@showValueMoves
+    @updateBoard()

@@ -1,7 +1,8 @@
 window.GCAPI or= {}
 
 window.GCAPI.Ui = class
-  constructor: (@game, @canvas, @controlPanel, @bg, @ratio) ->
+  constructor: (@game, @canvas, @controlPanel, @vvhPanel, @bg, @ratio) ->
+    @_displayVVH = false
 
   resizeBG: ->
     @bg.css('width', window.innerWidth)
@@ -26,10 +27,28 @@ window.GCAPI.Ui = class
     $(@canvas).css('left', (window.innerWidth / 2) - (@canvas.width / 2))
     @game.updateBoard()
 
+  resizeVVH: -> 
+    h = window.innerHeight / 1.2
+    w = h / 2
+    left = (h / 5.7) - 1
+
+    @vvhPanel.width = w
+    @vvhPanel.height = h
+    $(@vvhPanel).css('left', left)
+    $(@vvhPanel).css('top', (window.innerHeight / 2) - (h / 2))
+
+    $(@vvhPanel).drawRect
+      layer: true
+      fillStyle: "#000"
+      fromCenter: false
+      x: 0, y: 0
+      width: w
+      height: h
+
   resizeControl: ->
     me = this
-    h = window.innerHeight / 1.5
-    w = h / 6
+    h = window.innerHeight / 1.2
+    w = h / 5.7
     @controlPanel.width = w
     @controlPanel.height = h
     $(@controlPanel).css('top', (window.innerHeight / 2) - (h / 2))
@@ -44,38 +63,84 @@ window.GCAPI.Ui = class
       width: w
       height: h
 
-    $(@controlPanel).drawRect
-      fillStyle: "#F00"
+    ypos = 5
+    $(@controlPanel).drawImage
+      source: "/images/undo@2x.png"
       fromCenter: false
       layer: true
-      x: 5, y:5
+      x: 5, y: ypos
       width: w - 10
       height: w - 10
       click: (layer) ->
-        console.log me.game
         me.game.undo()
 
-    $(@controlPanel).drawRect
-      fillStyle: "#0F0"
+    ypos += (w - 10) + 5
+
+    $(@controlPanel).drawImage
+      source: "/images/redo@2x.png"
       fromCenter: false
       layer: true
-      x: 5, y: 5 + w - 10 + 5
+      x: 5, y: ypos
       width: w - 10
       height: w - 10
       click: (layer) ->
-        console.log me.game
         me.game.redo()
 
+    ypos += (w - 10) + 5
+
+    $(@controlPanel).drawImage
+      source: "/images/vvh@2x.png"
+      fromCenter: false
+      layer: true
+      x: 5, y: ypos
+      width: w - 10
+      height: w - 10
+      click: (layer) ->
+        $(me.vvhPanel).toggle()
+
+    ypos += (w - 10) + 5
+
+    $(@controlPanel).drawImage
+      source: "/images/values@2x.png"
+      fromCenter: false
+      layer: true
+      x: 5, y: ypos
+      width: w - 10
+      height: w - 10
+      click: (layer) ->
+        me.game.toggleValueMoves()
+
+    ypos += (w - 10) + 5
+
+    $(@controlPanel).drawImage
+      source: "/images/settings@2x.png"
+      fromCenter: false
+      x: 5, y: ypos
+      width: w - 10
+      height: w - 10
+      layer: true
+
+    ypos += (w - 10) + 5
+
+    $(@controlPanel).drawImage
+      source: "/images/variants@2x.png"
+      fromCenter: false
+      layer: true
+      x: 5, y: ypos
+      width: w - 10
+      height: w - 10
 
   startGame: () ->
     me = this
     @resizeCanvas()
     @resizeControl()
+    @resizeVVH()
     @resizeBG()
 
     $(window).resize ->
       me.resizeCanvas()
       me.resizeControl()
+      me.resizeVVH()
       me.resizeBG()
 
     @game.startGame()
