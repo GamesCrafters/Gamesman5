@@ -6,5 +6,8 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'thin'
 gem 'json'
+
 gem 'rspec'
 gem 'capybara'
+gem 'capybara-webkit'
+gem 'headless'
