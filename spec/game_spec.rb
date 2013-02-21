@@ -42,17 +42,42 @@ describe "Game" do
         page.should have_text description
       end
 
-      context "play", :js => true do
+      it "should be able to go to configure page", :js => true do
+        click_link title
+
+        page.should have_text title
+      end
+
+      context "configure", :js => true do
+        before do
+          visit "/game/#{resource}/new"
+        end
+
         it "should load settings" do
-          click_link title
           page.should have_text title
           page.should have_text "Player Info"
         end
 
-        it "should start the game" do
-          click_link title
+
+        it "should have config variables" do
+          page.evaluate_script("window.game.title").should == title
+          page.evaluate_script("window.game.asset").should == resource
+        end
+
+        it "should be able to go to play page" do
           click_button "Let's Play!"
 
+          page.should have_selector "canvas#GCAPI-main"
+        end
+      end
+
+      context "play", :js => true do
+        before do
+          visit "/game/#{resource}/new"
+          click_button "Let's Play!"
+        end
+
+        it "should start the game" do
           page.should have_selector "canvas#GCAPI-main"
           page.should have_selector "canvas#GCAPI-control"
         end

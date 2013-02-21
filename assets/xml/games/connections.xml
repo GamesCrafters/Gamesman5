@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <game>
+  <hidden />
   <title>Connections</title>
   <description>
     Connections is a basic game involving some things. These things are

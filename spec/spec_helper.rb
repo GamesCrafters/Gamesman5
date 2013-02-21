@@ -3,7 +3,6 @@ require 'rack/test'
 require './gamesman'
 require 'capybara/rspec'
 require 'capybara-webkit'
-require 'headless'
 
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
@@ -14,9 +13,12 @@ end
 
 Capybara.app = Gamesman.new
 
-# Capybara.javascript_driver = :webkit
+Capybara.javascript_driver = :webkit
+Capybara.default_wait_time = 1
 
 if Capybara.javascript_driver == :webkit
+  require 'headless'
+
   headless = Headless.new
   headless.start
 
