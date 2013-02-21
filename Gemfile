@@ -4,6 +4,7 @@ gem 'libxml-ruby'
 gem 'rake'
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'sinatra-assetpack'
 gem 'thin'
 gem 'json'
 
