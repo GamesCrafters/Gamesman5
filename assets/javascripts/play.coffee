@@ -4,12 +4,17 @@ $ = jQuery
 
 $.fn.extend
   startGame: (params) ->
-    this.html("<canvas id='GCAPI-main' /><canvas id='GCAPI-control' /><canvas id='GCAPI-vvh' />")
+    this.html("<canvas id='GCAPI-main' /><div id='GCAPI-noclick' /><canvas id='GCAPI-control' /><canvas id='GCAPI-vvh' />")
     window.mainCanvas = document.getElementById('GCAPI-main')
+    window.coverCanvas = document.getElementById('GCAPI-noclick')
     window.controlPanel = document.getElementById('GCAPI-control')
     window.vvhPanel = document.getElementById('GCAPI-vvh')
     $(mainCanvas).css('display', 'block')
     $(mainCanvas).css('position', 'absolute')
+    $(coverCanvas).css('display', 'none')
+    $(coverCanvas).css('z-index', '1000')
+    $(coverCanvas).css('background-color', 'rgba(255,255,255,.5)')
+    $(coverCanvas).css('position', 'absolute')
     $(controlPanel).css('display', 'block')
     $(controlPanel).css('position', 'absolute')
     $(controlPanel).css('left', '0px')
@@ -19,9 +24,9 @@ $.fn.extend
     $(this).css('height', window.innerHeight)
     initialBoard = game.getInitialBoard(params)
     notify = new game.notifier($(mainCanvas), params)
-    window.gameController = new GCAPI.Game(game.asset, params, notify, initialBoard)
+    window.gameController = new GCAPI.Game(game.asset, params, notify, initialBoard, coverCanvas)
     window.uiController = new GCAPI.Ui(gameController, mainCanvas,
-                                       controlPanel, vvhPanel, this, 
+                                       controlPanel, vvhPanel, coverCanvas, this,
                                        GCAPI.getAspectRatio(params))
     uiController.startGame()
 

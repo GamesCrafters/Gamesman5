@@ -21,7 +21,7 @@ window.GCAPI.getAspectRatio = (p) ->
   return reduce(dim[0], dim[1])
 
 window.GCAPI.Game = class Game
-  constructor: (name, parameters, notifierClass, board) ->
+  constructor: (name, parameters, notifierClass, board, @coverCanvas) ->
     @gameName = name
     @params = parameters
     @notifier = notifierClass
@@ -59,6 +59,7 @@ window.GCAPI.Game = class Game
               retval = []
               if data.status == "ok"
                 notifier(data.response, me)
+                $(me.coverCanvas).hide()
                 if data.response.length == 0
                   alert("Game Over!")
               else
@@ -86,6 +87,7 @@ window.GCAPI.Game = class Game
     @updateBoard()
 
   makeMove: (move) ->
+    $(@coverCanvas).show()
     @previousBoards.push(@currentBoard)
     @nextBoards = []
     @currentBoard = move.board
