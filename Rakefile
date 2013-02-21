@@ -1,5 +1,7 @@
-require './test_gamesman'
+require 'rspec/core'
+require 'rspec/core/rake_task'
 
-task :test do
-  GamesmanTest
-end
+desc "Run all specs in spec directory"
+RSpec::Core::RakeTask.new(:spec)
+
+task :default => :spec
