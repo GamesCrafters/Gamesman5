@@ -7,7 +7,9 @@ gem 'sinatra-contrib'
 gem 'thin'
 gem 'json'
 
-gem 'rspec'
-gem 'capybara'
-gem 'capybara-webkit'
-gem 'headless'
+group :development, :test do
+  gem 'rspec'
+  gem 'capybara'
+  gem 'capybara-webkit'
+  gem 'headless'
+end
