@@ -45,15 +45,15 @@ window.game.notifier = class extends GCAPI.GameNotifier
           color = "#00F"
         else
 
-        if color != "#FFF"
-          @canvas.drawRect
-            fillStyle: color
-            strokeStyle: "#000"
-            strokeWidth: 3
-            x: xpos, y: ypos
-            width: x_pixels
-            height: y_pixels
-            fromCenter: false
+        @canvas.drawRect
+          fillStyle: color
+          strokeStyle: "#000"
+          strokeWidth: 3
+          x: xpos, y: ypos
+          width: x_pixels
+          height: y_pixels
+          fromCenter: false
+          layer: true
         xpos += x_pixels
       ypos += y_pixels
 
@@ -62,6 +62,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
     y_pixels = Math.floor (game.notifier.canvas.height() / game.notifier.conf.height)
 
     window.moves = {}
+
     for move in data
       window.moves[move.move] = move
       color = "#FFF"
@@ -80,6 +81,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
       xpos = x_pixels * column
       ypos = y_pixels * row
+
       game.notifier.canvas.drawRect
         layer: true
         name: move.move

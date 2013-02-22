@@ -94,6 +94,7 @@ window.GCAPI.Game = class Game
 
   updateBoard: () ->
     $(@coverCanvas).show()
+    $(@notifier.canvas).removeLayers()
     @notifier.drawBoard(@currentBoard, @)
     @getPossibleMoves(@currentBoard, @notifier.drawMoves)
 
