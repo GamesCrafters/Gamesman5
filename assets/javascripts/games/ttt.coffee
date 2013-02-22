@@ -38,6 +38,8 @@ window.game.notifier = class extends GCAPI.GameNotifier
         char = board[index]
         name = String.fromCharCode(65 + column) + (row + 1)
 
+        change = x_pixels * 0.1
+
         color = "#FFF"
         if char == "X"
           color = "#F00"
@@ -46,7 +48,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
         else
 
         @canvas.drawRect
-          fillStyle: color
+          fillStyle: "#FFF"
           strokeStyle: "#000"
           strokeWidth: 3
           x: xpos, y: ypos
@@ -54,6 +56,25 @@ window.game.notifier = class extends GCAPI.GameNotifier
           height: y_pixels
           fromCenter: false
           layer: true
+        if color == "#F00"
+          @canvas.drawRect
+            fillStyle: color
+            strokeStyle: "#000"
+            strokeWidth: 3
+            x: xpos + change, y: ypos + change
+            width: x_pixels - (change * 2)
+            height: y_pixels - (change * 2)
+            fromCenter: false
+            layer: true
+        else if color == "#00F"
+          @canvas.drawArc
+            fillStyle: color
+            strokeStyle: "#000"
+            strokeWidth: 3
+            x: xpos + (x_pixels / 2), y: ypos + (y_pixels / 2)
+            radius: (x_pixels / 2) - change
+            layer: true
+
         xpos += x_pixels
       ypos += y_pixels
 
