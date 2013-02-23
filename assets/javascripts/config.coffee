@@ -39,26 +39,76 @@ $.fn.extend
       retval = ""
       return retval
 
-    contents = "<form action='play' class='custom'>"
-    contents += '<fieldset>'
-    contents += '<legend>Player Info</legend>'
-    contents += '<div class="row">'
-    contents += "<div class='six columns'>"
-    contents += "<input type='text' name='player1' placeholder='Player 1 Name' /></div>"
-    contents += "<div class='six columns'>"
-    contents += "<input type='text' name='player2' placeholder='Player 2 Name' /></div>"
-    contents += '</fieldset></div>'
-    contents += '<fieldset>'
-    contents += '<legend>Game Info</legend>'
+    gameInfo = ""
     for own name,info of settings
       if typeof info is "object"
         switch info.type
-          when "integer" then contents += makeRange name,info
-    contents += "</fieldset>"
-    contents += '<input class="button" type="submit" value="Let\'s Play!" />'
-    contents += "</form>"
+          when "integer" then gameInfo += makeRange name,info
 
+    contents = """
+      <form action='play' class='custom'>
+        <fieldset>
+          <legend>Player Info</legend>
+          <div class="row">
+            <div class="three columns">
+              <input type='text' name='player1' placeholder='Player 1 Name' />
+            </div>
+            <div class="three columns">
+              <div class="row collapse">
+                <div class="six columns">
+                  <a class='button expand prefix' id='p1-human'>Human</a>
+                </div>
+                <div class="six columns">
+                  <a class='secondary button expand postfix' id='p1-comp'>Computer</a>
+                </div>
+              </div>
+            </div>
+            <div class="three columns">
+              <input type='text' name='player2' placeholder='Player 2 Name' />
+            </div>
+            <div class="three columns">
+              <div class="row collapse">
+                <div class="six columns">
+                  <a class='button expand prefix' id='p2-human'>Human</a>
+                </div>
+                <div class="six columns">
+                  <a class='secondary button expand postfix' id='p2-comp'>Computer</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Game Info</legend>
+          #{gameInfo}
+        </fieldset>
+        <input type="hidden" name="p1-type" id="p1-type" value="human" />
+        <input type="hidden" name="p2-type" id="p2-type" value="human" />
+        <input class="button" type="submit" value="Let's Play!" />
+      </form>
+    """
     c.html contents
+
+    $('#p1-human').click (event) ->
+      $('#p1-human').removeClass('secondary')
+      $('#p1-comp').addClass('secondary')
+      $('#p1-type').val('human')
+
+    $('#p1-comp').click (event) ->
+      $('#p1-human').addClass('secondary')
+      $('#p1-comp').removeClass('secondary')
+      $('#p1-type').val('computer')
+
+    $('#p2-human').click (event) ->
+      $('#p2-human').removeClass('secondary')
+      $('#p2-comp').addClass('secondary')
+      $('#p2-type').val('human')
+
+    $('#p2-comp').click (event) ->
+      $('#p2-human').addClass('secondary')
+      $('#p2-comp').removeClass('secondary')
+      $('#p2-type').val('computer')
+
     return @
 
 

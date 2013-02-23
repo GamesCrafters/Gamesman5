@@ -13,7 +13,7 @@ end
 
 Capybara.app = Gamesman.new
 
-Capybara.javascript_driver = :webkit
+# Capybara.javascript_driver = :webkit
 Capybara.default_wait_time = 1
 
 #if Capybara.javascript_driver == :webkit
