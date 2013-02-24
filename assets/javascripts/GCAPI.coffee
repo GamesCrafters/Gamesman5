@@ -30,9 +30,27 @@ window.GCAPI.Game = class Game
     @currentBoard = board
     @baseUrl = "http://nyc.cs.berkeley.edu:8080/gcweb/service/gamesman/puzzles/"
     @showValueMoves = false
+    @currentPlayer = 0
 
   setDrawProcedure: (draw) ->
     @draw = draw
+
+  getPlayerName: ->
+    p = 'player' + (@currentPlayer + 1)
+    if !!@params[p]
+      @params[p]
+    else
+      'Player ' + (@currentPlayer + 1)
+
+  getPlayerType: ->
+    n = 'p' + (@currentPlayer + 1) + '-type'
+    if !!@params[n]
+      @params[n]
+    else
+      'human'
+
+  advancePlayer: ->
+    @currentPlayer = (@currentPlayer + 1) % 2
 
   getUrlTail: (board) ->
     retval = ""
@@ -43,11 +61,13 @@ window.GCAPI.Game = class Game
 
   getBoardValues: (board, notifier) ->
     requestUrl = @baseUrl + @gameName + "/getMoveValue" + @getUrlTail(board)
+    me = @
 
     $.ajax requestUrl,
             dataType: "json",
             success: (data) ->
-              notifier(data, @)
+              me.newBoardData = data
+              me.finishBoardUpdate()
 
   getPossibleMoves: (board, notifier) ->
     requestUrl = @baseUrl + @gameName + "/getNextMoveValues" + @getUrlTail(board)
@@ -56,29 +76,43 @@ window.GCAPI.Game = class Game
     $.ajax requestUrl,
             dataType: "json"
             success: (data) ->
-              retval = []
-              if data.status == "ok"
-                notifier(data.response, me)
-                $(me.coverCanvas).hide()
-                if data.response.length == 0
-                  alert("Game Over!")
-              else
-                notifier(data, me)
+              me.newMoves = data
+              me.finishBoardUpdate()
+
+  playAsComputer: (moves) ->
+    bestMove = moves[0]
+    for move in moves
+      if move.value == bestMove.value
+        if move.value == "win" and move.remoteness < bestMove.remoteness
+          bestMove = move
+        else if move.value != "win" and move.remoteness > bestMove.remoteness
+          bestMove = move
+      else
+        if move.value == "win"
+          bestMove = move
+        else if move.value == "tie" and bestMove.value == "lose"
+          bestMove = move
+    @makeMove(bestMove) if !!bestMove
 
   canUndo: () ->
     @previousBoards.length > 0
 
   undo: () ->
     if @canUndo()
+      @advancePlayer()
       @nextBoards.push(@currentBoard)
       @currentBoard = @previousBoards.pop()
-      @updateBoard()
+      if @getPlayerType() == "computer"
+        @undo()
+      else
+        @updateBoard()
 
   canRedo: () ->
     @nextBoards.length > 0
 
   redo: () ->
     if @canRedo()
+      @advancePlayer()
       @previousBoards.push(@currentBoard)
       @currentBoard = @nextBoards.pop()
       @updateBoard()
@@ -87,6 +121,7 @@ window.GCAPI.Game = class Game
     @updateBoard()
 
   makeMove: (move) ->
+    @advancePlayer()
     @previousBoards.push(@currentBoard)
     @nextBoards = []
     @currentBoard = move.board
@@ -95,8 +130,23 @@ window.GCAPI.Game = class Game
   updateBoard: () ->
     $(@coverCanvas).show()
     $(@notifier.canvas).removeLayers()
+    @startBoardUpdate()
+
+  startBoardUpdate: () ->
+    @newBoardData = null
+    @newMoves = null
+    @getBoardValues(@currentBoard)
+    @getPossibleMoves(@currentBoard)
+
+  finishBoardUpdate: () ->
+    if !@newBoardData or !@newMoves
+      return
     @notifier.drawBoard(@currentBoard, @)
-    @getPossibleMoves(@currentBoard, @notifier.drawMoves)
+    if @newMoves.status == "ok"
+      @notifier.drawMoves(@newMoves.response, @)
+    $(@coverCanvas).hide()
+    if @getPlayerType() == "computer"
+      @playAsComputer(@newMoves.response)
 
   getNotifier: () ->
     @notifier
