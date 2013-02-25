@@ -51,7 +51,7 @@
     <% end %>
   </div>
 
-  <% allTags.uniq! %>
+  <% allTags = allTags.uniq.sort %>
   <div class="three columns pull-nine">
     <div class="panel">
       <a href="#"><img src="http://nyc.cs.berkeley.edu:8080/gcweb/ui/images/logo.png" /></a>
