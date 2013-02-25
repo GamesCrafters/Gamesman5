@@ -1,7 +1,8 @@
 window.GCAPI or= {}
 
 window.GCAPI.Ui = class
-  constructor: (@game, @canvas, @controlPanel, @vvhPanel, @coverCanvas, @bg, @ratio) ->
+  constructor: (@game, @canvas, @controlPanel, @vvhPanel, @coverCanvas,
+                @status, @bg, @ratio) ->
     @_displayVVH = false
 
   resizeBG: ->
@@ -10,14 +11,14 @@ window.GCAPI.Ui = class
 
   resizeCanvas: ->
     hpad = ((window.innerHeight / 1.5 / 6) + 10) * 2
-    padding = 50
+    padding = window.innerHeight * 0.1
     wid1 = window.innerWidth - hpad
     hei1 = (wid1 / @ratio[0]) * @ratio[1]
 
-    hei2 = window.innerHeight - 50
+    hei2 = window.innerHeight - padding
     wid2 = (hei2 / @ratio[1]) * @ratio[0]
 
-    if hei1 <= window.innerHeight - 50
+    if hei1 <= window.innerHeight - padding
       @canvas.width = wid1
       @canvas.height = hei1
       $(@coverCanvas).width wid1
@@ -27,9 +28,9 @@ window.GCAPI.Ui = class
       @canvas.height = hei2
       $(@coverCanvas).width wid2
       $(@coverCanvas).height hei2
-    $(@canvas).css('top', (window.innerHeight / 2) - (@canvas.height / 2))
+    $(@canvas).css('top', (window.innerHeight / 2) - (@canvas.height / 2) - 10)
     $(@canvas).css('left', (window.innerWidth / 2) - (@canvas.width / 2))
-    $(@coverCanvas).css('top', (window.innerHeight / 2) - (@canvas.height / 2))
+    $(@coverCanvas).css('top', (window.innerHeight / 2) - (@canvas.height / 2) - 10)
     $(@coverCanvas).css('left', (window.innerWidth / 2) - (@canvas.width / 2))
     @game.updateBoard()
 

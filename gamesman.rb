@@ -66,6 +66,13 @@ class Gamesman < Sinatra::Base
     js :play, [ '/javascripts/jcanvas.min.js', '/js/play.js', '/js/GCAPI.js',
                 '/js/ui.js' ]
 
+    Dir.glob("assets/javascripts/games/*.{js,coffee}") do |file|
+      parts = file.split(/[\/.]/)
+      assetName = parts[-2].to_sym
+      fileName = "/js/games/#{parts[-2]}.js"
+      js assetName, [ fileName ]
+    end
+
     css :app, [ '/css/app.css', '/css/foundation.min.css' ]
   end
 

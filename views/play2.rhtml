@@ -1,7 +1,7 @@
 <% content_for :head do %>
 <%= js :app %>
 <%= js :play %>
-<script src="/js/games/<%= params[:name] %>.js"></script>
+<%= js params[:name].to_sym %>
 <style type="text/css">
 body {
   margin: 0;

@@ -2,7 +2,7 @@
 <%= css :app %>
 <%= js :app %>
 <%= js :config %>
-<script type="text/javascript" src="/js/games/<%= params[:name] %>.js"></script>
+<%= js params[:name].to_sym %>
 <script type="text/javascript">
   $(document).ready(function(){
     if (ensureConfigParameters()) {

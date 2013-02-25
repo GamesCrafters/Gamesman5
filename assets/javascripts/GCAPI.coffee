@@ -1,5 +1,6 @@
 # Coffee
 window.GCAPI or= {}
+window.GCAPI.console = console
 
 window.GCAPI.GameNotifier = class
   constructor: (@canvas, @conf) ->
@@ -21,7 +22,8 @@ window.GCAPI.getAspectRatio = (p) ->
   return reduce(dim[0], dim[1])
 
 window.GCAPI.Game = class Game
-  constructor: (name, parameters, notifierClass, board, @coverCanvas) ->
+  constructor: (name, parameters, notifierClass, board, @coverCanvas,
+                @statusBar) ->
     @gameName = name
     @params = parameters
     @notifier = notifierClass
@@ -35,22 +37,25 @@ window.GCAPI.Game = class Game
   setDrawProcedure: (draw) ->
     @draw = draw
 
-  getPlayerName: ->
-    p = 'player' + (@currentPlayer + 1)
+  getPlayerName: (player = @currentPlayer) ->
+    p = 'player' + (player + 1)
     if !!@params[p]
       @params[p]
     else
-      'Player ' + (@currentPlayer + 1)
+      'Player ' + (player + 1)
 
-  getPlayerType: ->
-    n = 'p' + (@currentPlayer + 1) + '-type'
+  getPlayerType: (player = @currentPlayer) ->
+    n = 'p' + (player + 1) + '-type'
     if !!@params[n]
       @params[n]
     else
       'human'
 
   advancePlayer: ->
-    @currentPlayer = (@currentPlayer + 1) % 2
+    @currentPlayer = @nextPlayer()
+
+  nextPlayer: (player = @currentPlayer) ->
+    (player + 1) % 2
 
   getUrlTail: (board) ->
     retval = ""
@@ -78,6 +83,8 @@ window.GCAPI.Game = class Game
             success: (data) ->
               me.newMoves = data
               me.finishBoardUpdate()
+            failure: (data) ->
+              me.getPossibleMoves(board, notifier)
 
   playAsComputer: (moves) ->
     bestMove = moves[0]
@@ -99,13 +106,22 @@ window.GCAPI.Game = class Game
 
   undo: () ->
     if @canUndo()
-      @advancePlayer()
-      @nextBoards.push(@currentBoard)
-      @currentBoard = @previousBoards.pop()
-      if @getPlayerType() == "computer"
-        @undo()
+      pcType = @getPlayerType()
+      pnType = @getPlayerType(@nextPlayer())
+      if pcType == pnType == "computer"
+        while @canUndo()
+          @advancePlayer()
+          @nextBoards.push(@currentBoard)
+          @currentBoard = @previousBoards.pop()
+      else if pcType == "computer" or pnType == "computer" and @previousBoards.length >= 2
+        @nextBoards.push(@currentBoard)
+        @nextBoards.push(@previousBoards.pop())
+        @currentBoard = @previousBoards.pop()
       else
-        @updateBoard()
+        @advancePlayer()
+        @nextBoards.push(@currentBoard)
+        @currentBoard = @previousBoards.pop()
+      @updateBoard()
 
   canRedo: () ->
     @nextBoards.length > 0
@@ -121,6 +137,7 @@ window.GCAPI.Game = class Game
     @updateBoard()
 
   makeMove: (move) ->
+    GCAPI.console?.log "Player '#{@getPlayerName()}' making move"
     @advancePlayer()
     @previousBoards.push(@currentBoard)
     @nextBoards = []
@@ -141,12 +158,23 @@ window.GCAPI.Game = class Game
   finishBoardUpdate: () ->
     if !@newBoardData or !@newMoves
       return
+
+    GCAPI.console?.log @newBoardData
+    if @newBoardData.status == "ok"
+      @boardData = @newBoardData.response
+    $(@statusBar).html "#{@getPlayerName()} #{@boardData.value} in #{@boardData.remoteness}"
+
+    GCAPI.console?.log "Drawing board state '#{@currentBoard}'"
     @notifier.drawBoard(@currentBoard, @)
     if @newMoves.status == "ok"
       @notifier.drawMoves(@newMoves.response, @)
-    $(@coverCanvas).hide()
     if @getPlayerType() == "computer"
-      @playAsComputer(@newMoves.response)
+      me = @
+      call = () ->
+        me.playAsComputer(me.newMoves.response) if !!me.newMoves
+      setTimeout(call, 500)
+    else
+      $(@coverCanvas).hide()
 
   getNotifier: () ->
     @notifier
