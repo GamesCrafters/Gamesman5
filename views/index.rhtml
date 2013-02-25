@@ -6,11 +6,12 @@
 <div class="row">
   <div class="twelve columns">
     <div class="panel">
-    <h1>Games</h1>
+    <h1>GamesCrafters</h1>
     </div>
   </div>
 </div>
 
+<% allTags = [] %>
 <div class="row">
   <div class="nine columns push-three">
     <% @games.each do |resource, parts| %>
@@ -18,6 +19,11 @@
       game_name = parts[0]
       description = parts[1]
       tags = parts[2]
+      if not params[:filter].nil? and params[:filter] != "all"
+        if not tags.include?(params[:filter])
+          next
+        end
+      end
       %>
       <div class="row">
         <div class="three columns mobile-two">
@@ -34,6 +40,7 @@
         </div>
         <div class="seven columns mobile-four">
           <ul class="link-list">
+            <% allTags = allTags.concat(tags) %>
             <% tags.each do |name| %>
               <li><a href=""><img src="images/<%= name %>.png" /></a></li>
             <% end %>
@@ -44,17 +51,20 @@
     <% end %>
   </div>
 
+  <% allTags.uniq! %>
   <div class="three columns pull-nine">
     <div class="panel">
-      <a href="#"><img src="http://placehold.it/300x240&text=[Dan Garcia]" /></a>
-      <h5><a href="#">Your Name</a></h5>
+      <a href="#"><img src="http://nyc.cs.berkeley.edu:8080/gcweb/ui/images/logo.png" /></a>
+      <h5><a href="#">Games</a></h5>
       <dl class="vertical tabs">
-        <dd class="active"><a href="#">Games</a></dd>
-        <dd><a href="#">Puzzles</a></dd>
-        <dd><a href="#">Section 3</a></dd>
-        <dd><a href="#">Section 4</a></dd>
-        <dd><a href="#">Section 5</a></dd>
-        <dd><a href="#">Section 6</a></dd>
+        <dd <%= 'class="active"' if params[:filter].nil? or params[:filter] == "all" %>>
+          <a href="?filter=all">All</a>
+        </dd>
+        <% allTags.each do |name| %>
+          <dd <%= 'class="active"' if params[:filter] == name %>>
+            <a href="?filter=<%= name %>"><%= name.split("-").join(" ").capitalize %></a>
+          </dd>
+        <% end %>
       </dl>
     </div>
   </div>
