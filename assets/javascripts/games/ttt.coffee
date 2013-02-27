@@ -106,7 +106,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
       game.notifier.canvas.drawRect
         layer: true
         name: move.move
-        fillStyle: color
+        fillStyle: "#FFF"
         strokeStyle: "#000"
         strokeWidth: 3
         x: xpos, y: ypos
@@ -115,3 +115,10 @@ window.game.notifier = class extends GCAPI.GameNotifier
         fromCenter: false
         click: (layer) ->
           game.makeMove window.moves[layer.name]
+
+      if color != "#FFF"
+        game.notifier.canvas.drawArc
+          fillStyle: color
+          x: xpos + (x_pixels / 2), y: ypos + (y_pixels / 2)
+          radius: (x_pixels / 5)
+          layer: true
