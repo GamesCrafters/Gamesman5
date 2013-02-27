@@ -7,6 +7,7 @@ gem 'sinatra-contrib'
 gem 'sinatra-assetpack'
 gem 'thin'
 gem 'json'
+gem 'therubyracer'
 
 group :development, :test do
   gem 'rspec'
