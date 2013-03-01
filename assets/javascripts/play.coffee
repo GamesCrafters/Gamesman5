@@ -4,7 +4,13 @@ $ = jQuery
 
 $.fn.extend
   startGame: (params) ->
-    this.html("<canvas id='GCAPI-main' /><div id='GCAPI-noclick' /><canvas id='GCAPI-control' /><canvas id='GCAPI-vvh' /><div id='GCAPI-status' />")
+    this.html("""
+      <canvas id='GCAPI-main' />
+      <div id='GCAPI-noclick' />
+      <canvas id='GCAPI-control' />
+      <canvas id='GCAPI-vvh' />
+      <div id='GCAPI-status' />
+    """)
     window.mainCanvas = document.getElementById('GCAPI-main')
     window.coverCanvas = document.getElementById('GCAPI-noclick')
     window.controlPanel = document.getElementById('GCAPI-control')
@@ -30,7 +36,9 @@ $.fn.extend
 
     initialBoard = game.getInitialBoard(params)
     notify = new game.notifier($(mainCanvas), params)
-    window.gameController = new GCAPI.Game(game.asset, params, notify, initialBoard, coverCanvas, '#GCAPI-status')
+    window.gameController = new GCAPI.Game(game.asset, params, notify,
+                                           initialBoard, coverCanvas,
+                                           '#GCAPI-status')
     window.uiController = new GCAPI.Ui(gameController, mainCanvas,
                                        controlPanel, vvhPanel,
                                        coverCanvas, '#GCAPI-status', this,
