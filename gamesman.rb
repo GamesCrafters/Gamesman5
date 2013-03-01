@@ -18,7 +18,7 @@ class Game < Sinatra::Base
     js :app, [ '/javascripts/jquery-1.8.2.min.js', '/javascripts/modernizr.foundation.js' ]
     js :config, [ '/js/config.js', '/js/GCAPI.js' ]
     js :play, [ '/javascripts/jcanvas.min.js', '/js/play.js', '/js/GCAPI.js',
-                '/js/ui.js' ]
+                '/js/ui.js', '/js/vvh.js' ]
 
     css :app, [ '/css/app.css', '/css/foundation.min.css' ]
   end
