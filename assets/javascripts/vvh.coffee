@@ -1,2 +1,2 @@
-window.drawVVH (canvas, moveList) ->
+window.drawVVH = (canvas, moveList) ->
   # Your code here
