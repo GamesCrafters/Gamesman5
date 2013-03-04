@@ -52,7 +52,7 @@ window.GCAPI.Ui = class
       width: w
       height: h
 
-    drawVVH @vvhPanel, @game.getMoveHistory
+    drawVVH @vvhPanel, @game.getMoveHistory if drawVVH?
 
   resizeControl: ->
     me = this

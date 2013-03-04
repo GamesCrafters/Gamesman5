@@ -61,6 +61,7 @@ window.GCAPI.Game = class Game
     for move in moves
       if move.remoteness not in remoteness[move.value]
         remoteness[move.value].push(move.remoteness)
+        remoteness[move.value].sort()
         if move.value == "lose"
           remoteness[move.value].reverse()
 
@@ -75,6 +76,7 @@ window.GCAPI.Game = class Game
     else
       r = "139"
     alpha = ".10"
+    console.log remoteness
     remotenesses = remoteness[m.value]
     if remotenesses.indexOf(m.remoteness) == 0
       alpha = "1"
