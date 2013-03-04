@@ -6,6 +6,7 @@
 <script type="text/javascript">
   $(document).ready(function(){
     if (ensureConfigParameters()) {
+      window.configurationHash = <%= params.to_json %>;
       $('#game-title').text(game.title);
       $('#game-config').getConfigure(game.parameters);
       $(this).foundationCustomForms();

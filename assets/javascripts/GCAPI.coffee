@@ -51,6 +51,65 @@ window.GCAPI.Game = class Game
     else
       'human'
 
+  getColor: (m, moves) ->
+    console.log "getting value for:"
+    console.log m
+    remoteness =
+      win: []
+      lose: []
+      tie: []
+    for move in moves
+      if move.remoteness not in remoteness[move.value]
+        remoteness[move.value].push(move.remoteness)
+        if move.value == "lose"
+          remoteness[move.value].reverse()
+
+    r = "0"
+    g = "0"
+    b = "0"
+    if m.value == "win"
+      g = "255"
+    else if m.value == "tie"
+      r = "255"
+      g = "255"
+    else
+      r = "139"
+    alpha = ".10"
+    remotenesses = remoteness[m.value]
+    if remotenesses.indexOf(m.remoteness) == 0
+      alpha = "1"
+    else if remotenesses.indexOf(m.remoteness) == 1
+      alpha = ".5"
+
+    return "rgba(#{r}, #{g}, #{b}, #{alpha})"
+
+  @sortMoves: (moves) ->
+    moves.sort (a, b) ->
+      if a.value == b.value
+        if a.value == "win"
+          if a.remoteness < b.remoteness
+            return 1
+          else if a.remoteness > b.remoteness
+            return -1
+          else
+            return 0
+        else
+          if a.remoteness < b.remoteness
+            return -1
+          else if a.remoteness > b.remoteness
+            return 1
+          else
+            return 0
+      else
+        if a.value == "win"
+          return -1
+        if b.value == "win"
+          return 1
+        if a.value == "tie"
+          return -1
+        if b.value == "tie"
+          return 1
+
   advancePlayer: ->
     @currentPlayer = @nextPlayer()
 

@@ -84,18 +84,15 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
     window.moves = {}
 
+    data = GCAPI.Game.sortMoves(data)
+
     for move in data
       window.moves[move.move] = move
       color = "#FFF"
 
       if game.showValueMoves
-        val = move.value
-        if val == 'lose'
-          color = "#8B0000"
-        else if val == 'win'
-          color = "#0F0"
-        else
-          color = "#FF0"
+        color = game.getColor(move, data)
+        console.log color
 
       column = move.move.charCodeAt(0) - 65
       row = move.move[1] - 1
@@ -106,7 +103,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
       game.notifier.canvas.drawRect
         layer: true
         name: move.move
-        fillStyle: "#FFF"
+        fillStyle: "#7F7F7F"
         strokeStyle: "#000"
         strokeWidth: 3
         x: xpos, y: ypos
@@ -116,7 +113,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
         click: (layer) ->
           game.makeMove window.moves[layer.name]
 
-      if color != "#FFF"
+      if game.showValueMoves
         game.notifier.canvas.drawArc
           fillStyle: color
           x: xpos + (x_pixels / 2), y: ypos + (y_pixels / 2)

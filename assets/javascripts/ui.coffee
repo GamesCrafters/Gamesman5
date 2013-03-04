@@ -52,13 +52,17 @@ window.GCAPI.Ui = class
       width: w
       height: h
 
+    drawVVH @vvhPanel, @game.getMoveHistory
+
   resizeControl: ->
     me = this
     h = window.innerHeight / 1.2
-    w = h / 5.7
+    w = h / 4.9
     @controlPanel.width = w
     @controlPanel.height = h
     $(@controlPanel).css('top', (window.innerHeight / 2) - (h / 2))
+
+    $(@controlPanel).removeLayers()
 
     $(@controlPanel).drawRect
       layer: true
@@ -124,9 +128,15 @@ window.GCAPI.Ui = class
       width: w - 10
       height: w - 10
       layer: true
+      click: (layer) ->
+        here = window.location
+        params = here.search
+        base = here.origin + "/game/ttt/new"
+        window.location = base + params
 
     ypos += (w - 10) + 5
 
+    ###
     $(@controlPanel).drawImage
       source: "/images/variants@2x.png"
       fromCenter: false
@@ -134,7 +144,8 @@ window.GCAPI.Ui = class
       x: 5, y: ypos
       width: w - 10
       height: w - 10
-
+    ###
+   
   startGame: () ->
     me = this
     @resizeCanvas()
