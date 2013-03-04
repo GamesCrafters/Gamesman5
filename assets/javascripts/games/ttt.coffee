@@ -48,7 +48,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
         else
 
         @canvas.drawRect
-          fillStyle: "#FFF"
+          fillStyle: "#7F7F7F"
           strokeStyle: "#000"
           strokeWidth: 3
           x: xpos, y: ypos
