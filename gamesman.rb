@@ -61,10 +61,11 @@ class Gamesman < Sinatra::Base
     serve '/javascripts', :from => '/assets/javascripts/vendor'
     serve '/css', :from => '/assets/stylesheets'
 
-    js :app, [ '/javascripts/jquery-1.8.2.min.js', '/javascripts/modernizr.foundation.js' ]
+    js :app, [ '/javascripts/jquery-1.8.2.min.js', 
+               '/javascripts/modernizr.foundation.js' ]
     js :config, [ '/js/config.js', '/js/GCAPI.js' ]
     js :play, [ '/javascripts/jcanvas.min.js', '/js/play.js', '/js/GCAPI.js',
-                '/js/ui.js' ]
+                '/js/ui.js', '/js/vvh.js' ]
 
     Dir.glob("assets/javascripts/games/*.{js,coffee}") do |file|
       parts = file.split(/[\/.]/)
@@ -83,6 +84,36 @@ class Gamesman < Sinatra::Base
   get '/game/:name/play' do
     response.headers['Access-Control-Allow-Origin'] = '*'
     erb :play2
+  end
+
+  get '/fake/:name/getMoveValue:params' do
+    parts = params[:params].split(";")
+    parameters = {}
+    parts.each do |part|
+      if part == ""
+        next
+      end
+      a,b = part.split("=")
+      parameters[a] = b
+    end
+    { :status => "ok", :response => 
+      { :board => parameters['board'], :remoteness => 1000, :value => "tie" }
+    }.to_json
+  end
+
+  get '/fake/:name/getNextMoveValues:params' do
+    parts = params[:params].split(";")
+    parameters = {}
+    parts.each do |part|
+      if part == ""
+        next
+      end
+      a,b = part.split("=")
+      parameters[a] = b
+    end
+    { :status => "ok", :response => 
+      [ { :board => parameters['board'], :remoteness => 1000, :value => "tie" } ]
+    }.to_json
   end
 
   get '/' do

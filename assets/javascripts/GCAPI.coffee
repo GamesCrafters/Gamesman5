@@ -33,6 +33,11 @@ window.GCAPI.Game = class Game
     @baseUrl = "http://nyc.cs.berkeley.edu:8080/gcweb/service/gamesman/puzzles/"
     @showValueMoves = false
     @currentPlayer = 0
+    if @params["fake"]
+      @fakeIt()
+
+  fakeIt: () ->
+    @baseUrl = "/fake/"
 
   setDrawProcedure: (draw) ->
     @draw = draw
