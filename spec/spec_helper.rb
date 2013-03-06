@@ -14,7 +14,7 @@ end
 Capybara.app = Gamesman.new
 
 # Capybara.javascript_driver = :webkit
-Capybara.default_wait_time = 10
+Capybara.default_wait_time = 1
 
 #if Capybara.javascript_driver == :webkit
 #  require 'headless'
