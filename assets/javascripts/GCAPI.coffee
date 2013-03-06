@@ -35,9 +35,14 @@ window.GCAPI.Game = class Game
     @currentPlayer = 0
     if @params["fake"]
       @fakeIt()
+    if game.useC?
+      @useC()
 
   fakeIt: () ->
     @baseUrl = "/fake/"
+
+  useC: () ->
+    @baseUrl = "http://nyc.cs.berkeley.edu:8081/"
 
   setDrawProcedure: (draw) ->
     @draw = draw
@@ -134,23 +139,33 @@ window.GCAPI.Game = class Game
     requestUrl = @baseUrl + @gameName + "/getMoveValue" + @getUrlTail(board)
     me = @
 
+    if @newBoardData?
+      return
+
     $.ajax requestUrl,
             dataType: "json",
             success: (data) ->
               me.newBoardData = data
               me.finishBoardUpdate()
+            error: (data) ->
+              console.log ("Get Board Values failed. Trying again")
+              setTimeout (-> me.getBoardValues(board, notifier)), 1000
 
   getPossibleMoves: (board, notifier) ->
     requestUrl = @baseUrl + @gameName + "/getNextMoveValues" + @getUrlTail(board)
     me = @
+
+    if @newMoves?
+      return
 
     $.ajax requestUrl,
             dataType: "json"
             success: (data) ->
               me.newMoves = data
               me.finishBoardUpdate()
-            failure: (data) ->
-              me.getPossibleMoves(board, notifier)
+            error: (data) ->
+              console.log("Get Possible Moves failed. Trying again")
+              setTimeout (-> me.getPossibleMoves(board, notifier)), 1000
 
   playAsComputer: (moves) ->
     bestMove = moves[0]
