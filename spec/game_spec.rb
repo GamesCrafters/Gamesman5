@@ -80,6 +80,9 @@ describe "Game" do
         it "should start the game" do
           page.should have_selector "canvas#GCAPI-main"
           page.should have_selector "canvas#GCAPI-control"
+          page.should have_selector "div#GCAPI-noclick"
+          page.should have_selector "canvas#GCAPI-vvh"
+          page.should have_selector "div#GCAPI-status"
         end
       end
     end

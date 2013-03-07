@@ -35,9 +35,14 @@ window.GCAPI.Game = class Game
     @currentPlayer = 0
     if @params["fake"]
       @fakeIt()
+    if game.useC?
+      @useC()
 
   fakeIt: () ->
     @baseUrl = "/fake/"
+
+  useC: () ->
+    @baseUrl = "http://nyc.cs.berkeley.edu:8081/"
 
   setDrawProcedure: (draw) ->
     @draw = draw
@@ -64,15 +69,17 @@ window.GCAPI.Game = class Game
       lose: []
       tie: []
     for move in moves
-      if move.remoteness not in remoteness[move.value]
-        remoteness[move.value].push(move.remoteness)
-        remoteness[move.value].sort()
-        if move.value == "lose"
-          remoteness[move.value].reverse()
+      if move.value?
+        if move.remoteness not in remoteness[move.value]
+          remoteness[move.value].push(move.remoteness)
+          remoteness[move.value].sort()
+          if move.value == "lose"
+            remoteness[move.value].reverse()
 
     r = "0"
     g = "0"
     b = "0"
+
     if m.value == "win"
       g = "255"
     else if m.value == "tie"
@@ -83,10 +90,13 @@ window.GCAPI.Game = class Game
     alpha = ".10"
     console.log remoteness
     remotenesses = remoteness[m.value]
-    if remotenesses.indexOf(m.remoteness) == 0
-      alpha = "1"
-    else if remotenesses.indexOf(m.remoteness) == 1
-      alpha = ".5"
+    if remotenesses?
+      if remotenesses.indexOf(m.remoteness) == 0
+        alpha = "1"
+      else if remotenesses.indexOf(m.remoteness) == 1
+        alpha = ".5"
+    else
+      alpha = "0"
 
     return "rgba(#{r}, #{g}, #{b}, #{alpha})"
 
@@ -134,23 +144,33 @@ window.GCAPI.Game = class Game
     requestUrl = @baseUrl + @gameName + "/getMoveValue" + @getUrlTail(board)
     me = @
 
+    if @newBoardData?
+      return
+
     $.ajax requestUrl,
             dataType: "json",
             success: (data) ->
               me.newBoardData = data
               me.finishBoardUpdate()
+            error: (data) ->
+              console.log ("Get Board Values failed. Trying again")
+              setTimeout (-> me.getBoardValues(board, notifier)), 1000
 
   getPossibleMoves: (board, notifier) ->
     requestUrl = @baseUrl + @gameName + "/getNextMoveValues" + @getUrlTail(board)
     me = @
+
+    if @newMoves?
+      return
 
     $.ajax requestUrl,
             dataType: "json"
             success: (data) ->
               me.newMoves = data
               me.finishBoardUpdate()
-            failure: (data) ->
-              me.getPossibleMoves(board, notifier)
+            error: (data) ->
+              console.log("Get Possible Moves failed. Trying again")
+              setTimeout (-> me.getPossibleMoves(board, notifier)), 1000
 
   playAsComputer: (moves) ->
     bestMove = moves[0]
@@ -221,6 +241,18 @@ window.GCAPI.Game = class Game
     @getBoardValues(@currentBoard)
     @getPossibleMoves(@currentBoard)
 
+  fixMoves: (moves) ->
+    fixMove = (m) ->
+      if game.useC?
+        if m.value == "win"
+          m.value = "lose"
+        else if m.value == "lose"
+          m.value = "win"
+      m
+    moves = (fixMove(m) for m in moves)
+    console.log moves
+    moves
+
   finishBoardUpdate: () ->
     if !@newBoardData or !@newMoves
       return
@@ -233,7 +265,7 @@ window.GCAPI.Game = class Game
     GCAPI.console?.log "Drawing board state '#{@currentBoard}'"
     @notifier.drawBoard(@currentBoard, @)
     if @newMoves.status == "ok"
-      @notifier.drawMoves(@newMoves.response, @)
+      @notifier.drawMoves(@fixMoves(@newMoves.response), @)
     if @getPlayerType() == "computer"
       me = @
       call = () ->
