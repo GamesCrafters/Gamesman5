@@ -5,7 +5,7 @@ $ = jQuery
 $.fn.extend
   startGame: (params) ->
     this.html("""
-      <canvas id='GCAPI-main' />
+      <canvas id='GCAPI-mainu' />
       <div id='GCAPI-noclick' />
       <canvas id='GCAPI-control' />
       <canvas id='GCAPI-vvh' />
