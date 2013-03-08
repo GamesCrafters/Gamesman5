@@ -38,7 +38,7 @@ $.fn.extend
     notify = new game.notifier($(mainCanvas), params)
     window.gameController = new GCAPI.Game(game.asset, params, notify,
                                            initialBoard, coverCanvas,
-                                           '#GCAPI-status')
+                                           '#GCAPI-status', vvhPanel)
     window.uiController = new GCAPI.Ui(gameController, mainCanvas,
                                        controlPanel, vvhPanel,
                                        coverCanvas, '#GCAPI-status', this,

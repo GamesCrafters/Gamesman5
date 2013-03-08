@@ -7,7 +7,7 @@ window.game or= {}
 window.game.title = "Tic Tac Toe"
 window.game.asset = "ttt"
 window.game.description = "This is Tic Tac Toe"
-window.game.useC = true
+window.game.type = "java"
 window.game.parameters = {
   width: { type: "integer", values: [3,4,5], desc: "Board Width" },
   height: { type: "integer", values: [3,4,5], desc: "Board Height" },
@@ -40,7 +40,6 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
         change = x_pixels * 0.1
 
-        console.log char
         color = "#FFF"
         if char == "X" or char == "x"
           color = "#F00"
@@ -93,11 +92,14 @@ window.game.notifier = class extends GCAPI.GameNotifier
         color = game.getColor(move, data)
         console.log color
 
-      val = parseInt(move.move) - 1
-      column = val % 3
-      row = Math.floor(val / 3)
-      # column = move.move.charCodeAt(0) - 65
-      # row = move.move[1] - 1
+      column = row = 0
+      if game.isC()
+        val = parseInt(move.move) - 1
+        column = val % 3
+        row = Math.floor(val / 3)
+      else
+        column = move.move.charCodeAt(0) - 65
+        row = move.move[1] - 1
 
       xpos = x_pixels * column
       ypos = y_pixels * row
