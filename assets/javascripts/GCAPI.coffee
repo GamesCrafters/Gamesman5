@@ -23,19 +23,22 @@ window.GCAPI.getAspectRatio = (p) ->
 
 window.GCAPI.Game = class Game
   constructor: (name, parameters, notifierClass, board, @coverCanvas,
-                @statusBar) ->
+                @statusBar, @vvhPanel) ->
     @gameName = name
     @params = parameters
     @notifier = notifierClass
-    @previousBoards = []
-    @nextBoards = []
-    @currentBoard = board
+    @previousStates = []
+    @nextStates = []
+    @currentState =
+      board:
+        board: board
+      moves: []
     @baseUrl = "http://nyc.cs.berkeley.edu:8080/gcweb/service/gamesman/puzzles/"
     @showValueMoves = false
     @currentPlayer = 0
     if @params["fake"]
       @fakeIt()
-    if game.useC?
+    if game.type == "c"
       @useC()
 
   fakeIt: () ->
@@ -43,6 +46,9 @@ window.GCAPI.Game = class Game
 
   useC: () ->
     @baseUrl = "http://nyc.cs.berkeley.edu:8081/"
+
+  isC: () ->
+    @baseUrl == "http://nyc.cs.berkeley.edu:8081/"
 
   setDrawProcedure: (draw) ->
     @draw = draw
@@ -173,22 +179,11 @@ window.GCAPI.Game = class Game
               setTimeout (-> me.getPossibleMoves(board, notifier)), 1000
 
   playAsComputer: (moves) ->
-    bestMove = moves[0]
-    for move in moves
-      if move.value == bestMove.value
-        if move.value == "win" and move.remoteness < bestMove.remoteness
-          bestMove = move
-        else if move.value != "win" and move.remoteness > bestMove.remoteness
-          bestMove = move
-      else
-        if move.value == "win"
-          bestMove = move
-        else if move.value == "tie" and bestMove.value == "lose"
-          bestMove = move
-    @makeMove(bestMove) if !!bestMove
+    moves = GCAPI.Game.sortMoves(moves)
+    @makeMove(moves[0]) if moves[0]?
 
   canUndo: () ->
-    @previousBoards.length > 0
+    @previousStates.length > 0
 
   undo: () ->
     if @canUndo()
@@ -197,26 +192,26 @@ window.GCAPI.Game = class Game
       if pcType == pnType == "computer"
         while @canUndo()
           @advancePlayer()
-          @nextBoards.push(@currentBoard)
-          @currentBoard = @previousBoards.pop()
+          @nextStates.push(@currentState)
+          @currentState = @previousStates.pop()
       else if pcType == "computer" or pnType == "computer" and @previousBoards.length >= 2
-        @nextBoards.push(@currentBoard)
-        @nextBoards.push(@previousBoards.pop())
-        @currentBoard = @previousBoards.pop()
+        @nextStates.push(@currentState)
+        @nextStates.push(@previousStates.pop())
+        @currentState = @previousStates.pop()
       else
         @advancePlayer()
-        @nextBoards.push(@currentBoard)
-        @currentBoard = @previousBoards.pop()
+        @nextStates.push(@currentState)
+        @currentState = @previousStates.pop()
       @updateBoard()
 
   canRedo: () ->
-    @nextBoards.length > 0
+    @nextStates.length > 0
 
   redo: () ->
     if @canRedo()
       @advancePlayer()
-      @previousBoards.push(@currentBoard)
-      @currentBoard = @nextBoards.pop()
+      @previousStates.push(@currentState)
+      @currentState = @nextStates.pop()
       @updateBoard()
 
   startGame: () ->
@@ -225,10 +220,18 @@ window.GCAPI.Game = class Game
   makeMove: (move) ->
     GCAPI.console?.log "Player '#{@getPlayerName()}' making move"
     @advancePlayer()
-    @previousBoards.push(@currentBoard)
-    @nextBoards = []
-    @currentBoard = move.board
+    @previousStates.push(@currentState)
+    @nextStates = []
+    @currentState =
+      board: move
     @updateBoard()
+
+  getMoveHistory: () ->
+    retval = []
+    for state in @previousStates
+      retval.push(state)
+    retval.push(@currentState)
+    retval
 
   updateBoard: () ->
     $(@coverCanvas).show()
@@ -238,8 +241,8 @@ window.GCAPI.Game = class Game
   startBoardUpdate: () ->
     @newBoardData = null
     @newMoves = null
-    @getBoardValues(@currentBoard)
-    @getPossibleMoves(@currentBoard)
+    @getBoardValues(@currentState.board.board)
+    @getPossibleMoves(@currentState.board.board)
 
   fixMoves: (moves) ->
     fixMove = (m) ->
@@ -258,14 +261,18 @@ window.GCAPI.Game = class Game
       return
 
     GCAPI.console?.log @newBoardData
-    if @newBoardData.status == "ok"
+    @currentState = {}
+    if @newBoardData.status == "ok" and @newMoves.status == "ok"
       @boardData = @newBoardData.response
-    $(@statusBar).html "#{@getPlayerName()} #{@boardData.value} in #{@boardData.remoteness}"
+      @currentState.board = @boardData
+      $(@statusBar).html "#{@getPlayerName()} #{@boardData.value} in #{@boardData.remoteness}"
 
-    GCAPI.console?.log "Drawing board state '#{@currentBoard}'"
-    @notifier.drawBoard(@currentBoard, @)
-    if @newMoves.status == "ok"
+      GCAPI.console?.log "Drawing board state '#{@currentState.board.board}'"
+      @notifier.drawBoard(@currentState.board.board, @)
+
+      @currentState.moves = @newMoves.response
       @notifier.drawMoves(@fixMoves(@newMoves.response), @)
+    @drawVVH()
     if @getPlayerType() == "computer"
       me = @
       call = () ->
@@ -273,6 +280,9 @@ window.GCAPI.Game = class Game
       setTimeout(call, 500)
     else
       $(@coverCanvas).hide()
+
+  drawVVH: () ->
+    drawVVH @vvhPanel, @getMoveHistory()
 
   getNotifier: () ->
     @notifier
