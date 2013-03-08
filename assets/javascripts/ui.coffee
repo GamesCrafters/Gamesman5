@@ -130,7 +130,7 @@ window.GCAPI.Ui = class
       height: w - 10
       layer: true
       click: (layer) ->
-        me.game.storeState()
+        me.game.storeGameState()
         here = window.location
         params = here.search
         base = here.origin + here.pathname[...-4] + "new"

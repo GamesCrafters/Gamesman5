@@ -233,6 +233,9 @@ window.GCAPI.Game = class Game
     retval.push(@currentState)
     retval
 
+  storeGameState: () ->
+    $.cookie("GCAPI-Game-State", JSON.stringify(@getMoveHistory()), { path : '/' })
+
   updateBoard: () ->
     $(@coverCanvas).show()
     $(@notifier.canvas).removeLayers()
