@@ -52,7 +52,7 @@ window.GCAPI.Ui = class
       width: w
       height: h
 
-    drawVVH @vvhPanel, @game.getMoveHistory if drawVVH?
+    @game.drawVVH()
 
   resizeControl: ->
     me = this
@@ -106,6 +106,7 @@ window.GCAPI.Ui = class
       height: w - 10
       click: (layer) ->
         $(me.vvhPanel).toggle()
+        me.resizeVVH()
 
     ypos += (w - 10) + 5
 
@@ -129,34 +130,25 @@ window.GCAPI.Ui = class
       height: w - 10
       layer: true
       click: (layer) ->
+        me.game.storeState()
         here = window.location
         params = here.search
-        base = here.origin + "/game/ttt/new"
+        base = here.origin + here.pathname[...-4] + "new"
         window.location = base + params
 
     ypos += (w - 10) + 5
-
-    ###
-    $(@controlPanel).drawImage
-      source: "/images/variants@2x.png"
-      fromCenter: false
-      layer: true
-      x: 5, y: ypos
-      width: w - 10
-      height: w - 10
-    ###
    
   startGame: () ->
     me = this
     @resizeCanvas()
-    @resizeControl()
     @resizeVVH()
     @resizeBG()
+    @resizeControl()
 
     $(window).resize ->
       me.resizeCanvas()
-      me.resizeControl()
       me.resizeVVH()
       me.resizeBG()
+      me.resizeControl()
 
     @game.startGame()
