@@ -50,6 +50,14 @@ window.GCAPI.Game = class Game
   isC: () ->
     @baseUrl == "http://nyc.cs.berkeley.edu:8081/"
 
+  updateSettings: () ->
+    @storeGameState()
+    here = window.location
+    params = here.search
+    # Remove "play" replace with "new"
+    base = here.origin + here.pathname[...-4] + "new"
+    window.location = base + params + "&update-settings=true"
+
   setDrawProcedure: (draw) ->
     @draw = draw
 
@@ -141,9 +149,16 @@ window.GCAPI.Game = class Game
 
   getUrlTail: (board) ->
     retval = ""
-    for own k,v of @params
-      retval += ";" + k + "=" + v
-    retval += ";board=" + escape(board)
+    if @isC()
+      retval = "?"
+      for own k,v of @params
+        retval += "#{k}=#{v}&"
+      retval += "board=" + escape(board)
+    else
+      retval = ""
+      for own k,v of @params
+        retval += ";" + k + "=" + v
+      retval += ";board=" + escape(board)
     return retval
 
   getBoardValues: (board, notifier) ->
@@ -215,6 +230,11 @@ window.GCAPI.Game = class Game
       @updateBoard()
 
   startGame: () ->
+    if @params["continue-game"] == "yes"
+      console.log "Restoring..."
+      @restoreGameState()
+      console.log @currentState
+      console.log "Restored"
     @updateBoard()
 
   makeMove: (move) ->
@@ -232,6 +252,26 @@ window.GCAPI.Game = class Game
       retval.push(state)
     retval.push(@currentState)
     retval
+
+  storeGameState: () ->
+    $.cookie("GCAPI-currentState", JSON.stringify(@currentState),
+             { path:'/' })
+    $.cookie("GCAPI-previousStates", JSON.stringify(@previousStates),
+             { path:'/' })
+    $.cookie("GCAPI-nextStates", JSON.stringify(@nextStates),
+             { path:'/' })
+
+  restoreGameState: () ->
+    cs = $.cookie("GCAPI-currentState")
+    ps = $.cookie("GCAPI-previousStates")
+    ns = $.cookie("GCAPI-nextStates")
+    console.log cs
+    console.log ps
+    console.log ns
+    if cs? and ps? and ns?
+      @currentState = JSON.parse(cs)
+      @previousStates = JSON.parse(ps)
+      @nextStates = JSON.parse(ns)
 
   updateBoard: () ->
     $(@coverCanvas).show()
