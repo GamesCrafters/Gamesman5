@@ -86,9 +86,9 @@ $.fn.extend
         </fieldset>
         <input type="hidden" name="p1-type" id="p1-type" value="#{ if configurationHash['p1-type'] == "computer" then "computer" else "human"}" />
         <input type="hidden" name="p2-type" id="p2-type" value="#{ if configurationHash['p2-type'] == "computer" then "computer" else "human"}" />
-        '<input type="hidden" name="continue-game" id="continue-game" value="#{ if configurationHash['update-settings']? then "yes" else "no"}" />
+        <input type="hidden" name="continue-game" id="continue-game" value="#{ if configurationHash['update-settings']? then "yes" else "no"}" />
         <input class="button" type="submit" value="#{ if configurationHash['update-settings']? then "Continue Game" else "Let's Play!"}" />
-        #{ '<input class="button" type="submit" id="restartButton" value="New Game" />' if configurationHash['update-settings']? }
+        #{ if configurationHash['update-settings'] then '<input class="button" type="submit" id="restartButton" value="New Game" />' else '' }
       </form>
     """
     c.html contents
