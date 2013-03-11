@@ -61,7 +61,7 @@ $.fn.extend
                   <a class='#{"secondary" if configurationHash['p1-type'] == 'computer'} button expand prefix' id='p1-human'>Human</a>
                 </div>
                 <div class="six columns">
-                  <a class='#{"secondary" if configurationHash['p1-type'] == 'human'} button expand prefix' id='p1-comp'>Computer</a>
+                  <a class='#{"secondary" if configurationHash['p1-type'] != 'computer'} button expand prefix' id='p1-comp'>Computer</a>
                 </div>
               </div>
             </div>
@@ -74,7 +74,7 @@ $.fn.extend
                   <a class='#{"secondary" if configurationHash['p2-type'] == 'computer'} button expand prefix' id='p2-human'>Human</a>
                 </div>
                 <div class="six columns">
-                  <a class='#{"secondary" if configurationHash['p2-type'] == 'human'} button expand prefix' id='p2-comp'>Computer</a>
+                  <a class='#{"secondary" if configurationHash['p2-type'] != 'computer'} button expand prefix' id='p2-comp'>Computer</a>
                 </div>
               </div>
             </div>
