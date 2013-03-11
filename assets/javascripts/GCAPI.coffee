@@ -284,9 +284,9 @@ window.GCAPI.Game = class Game
     @getBoardValues(@currentState.board.board)
     @getPossibleMoves(@currentState.board.board)
 
-  fixMoves: (moves) ->
+  fixMoves: (moves, me) ->
     fixMove = (m) ->
-      if game.useC?
+      if me.isC()
         if m.value == "win"
           m.value = "lose"
         else if m.value == "lose"
@@ -311,7 +311,7 @@ window.GCAPI.Game = class Game
       @notifier.drawBoard(@currentState.board.board, @)
 
       @currentState.moves = @newMoves.response
-      @notifier.drawMoves(@fixMoves(@newMoves.response), @)
+      @notifier.drawMoves(@fixMoves(@newMoves.response, @), @)
     @drawVVH()
     if @getPlayerType() == "computer"
       me = @
