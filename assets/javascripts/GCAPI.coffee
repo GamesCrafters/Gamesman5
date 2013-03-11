@@ -254,6 +254,7 @@ window.GCAPI.Game = class Game
     retval
 
   storeGameState: () ->
+<<<<<<< HEAD
     $.cookie("GCAPI-currentState", JSON.stringify(@currentState),
              { path:'/' })
     $.cookie("GCAPI-previousStates", JSON.stringify(@previousStates),
