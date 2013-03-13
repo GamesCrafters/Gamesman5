@@ -105,15 +105,30 @@ class Gamesman < Sinatra::Base
   get '/fake/:name/getNextMoveValues:params' do
     parts = params[:params].split(";")
     parameters = {}
+    resp = []
     parts.each do |part|
       if part == ""
         next
       end
       a,b = part.split("=")
-      parameters[a] = b
+      if a == "board"
+        for i in 0..b.length
+          board = b
+          board[i] = 'X' if board[i] == " "
+          tmpboard = board.dup
+          board[i] = " "
+          tmp = rand(2)
+          wtl = "win" if tmp == 0
+          wtl = "tie" if tmp == 1
+          wtl = "lose" if tmp == 2
+          move = i
+          resp.push({ :board => tmpboard, :remoteness => rand(100), :value => wtl , :move => move})
+        end
+      else
+        parameters[a] = b
+      end
     end
-    { :status => "ok", :response => 
-      [ { :board => parameters['board'], :remoteness => 1000, :value => "tie" } ]
+    { :status => "ok", :response => resp 
     }.to_json
   end
 
