@@ -1,6 +1,6 @@
 window.drawVVH = (canvas, moveList) ->
 	console.log moveList
-	c = document.getElementById(canvas)  	# change to c = canvas
+	c = canvas  	# change to c = canvas
 
 	maxH = c.height
 	maxW = c.width
@@ -12,16 +12,12 @@ window.drawVVH = (canvas, moveList) ->
 	padx = 15
 	pady = 5
 
-	ctx = c.getContext("2d")
-	ctx.fillStyle = "black"
-	ctx.fillRect 0, 0, maxW, maxH
-
 	xlabel = ->				# labels moves until win
 	  ctx = c.getContext("2d")
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
 	  ctx.fillStyle = "white"	
-	  ctx.fillText "D", canvas.width / 2, 20
+	  ctx.fillText "D", canvas.width / 2, 5
 	  i = 0
 	  while i <= maxW/2
 	    if i % (cmax) is 0
@@ -48,7 +44,15 @@ window.drawVVH = (canvas, moveList) ->
 	
 
 
+	practice =  ->
+		ctx = c.getContext("2d")
+		ctx.textBaseline = "middle"
+		ctx.textAlign = "center"
+		ctx.fillStle = "white"
 
+		moves = moveList[0]
+
+		ctx.fillText moves, pady, 0
 
 
 
