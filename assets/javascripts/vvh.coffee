@@ -1,4 +1,4 @@
 window.drawVVH = (canvas, moveList) ->
-  # Practice.
+  #What does this. More Practice.
   console.log moveList
   # Your code here
