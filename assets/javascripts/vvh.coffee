@@ -44,16 +44,16 @@ window.drawVVH = (canvas, moveList) ->
 	
 
 
-	practice =  ->
-		ctx = c.getContext("2d")
-		ctx.textBaseline = "middle"
-		ctx.textAlign = "center"
-		ctx.fillStle = "white"
+	#practice =  ->
+	#	ctx = c.getContext("2d")
+	#	ctx.textBaseline = "middle"
+	#	ctx.textAlign = "center"
+	#	ctx.fillStle = "white"
+#
+#		moves = moveList
 
-		moves = moveList[0]
-
-		ctx.fillText moves, pady, 0
-
+#		ctx.fillText moves, 50, 50
+#	practice()
 
 
 
