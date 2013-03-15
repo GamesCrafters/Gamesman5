@@ -44,18 +44,33 @@ window.drawVVH = (canvas, moveList) ->
 	
 
 
-	#practice =  ->
-	#	ctx = c.getContext("2d")
-	#	ctx.textBaseline = "middle"
-	#	ctx.textAlign = "center"
-	#	ctx.fillStle = "white"
-#
-#		moves = moveList
+	practice =  ->
+		ctx = c.getContext("2d")
+		ctx.textBaseline = "middle"
+		ctx.textAlign = "center"
+		ctx.fillStle = "white"
 
-#		ctx.fillText moves, 50, 50
-#	practice()
+		moves = null
+		if moveList != null
+			moves = moveList
 
+		ctx.fillText moves, 50, 50
+	practice()
 
+	# Draw the Grid
+	grid = ->
+		i = padx
+		ctx = c.getContext("2d")
+		ctx.strokeStyle = "white"
+		while i < maxW - padx
+			if i % 70 is 0
+				i += 10
+			else
+				ctx.moveTo i, 25
+			ctx.lineTo i, maxH
+			ctx.stroke()
+			i += 10
+	grid()
 
 
 
