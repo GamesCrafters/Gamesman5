@@ -7,7 +7,7 @@ window.game or= {}
 window.game.title = "Tic Tac Toe"
 window.game.asset = "ttt"
 window.game.description = "This is Tic Tac Toe"
-window.game.type = "java"
+window.game.type = "c"
 window.game.parameters = {
   width: { type: "integer", values: [3,4,5], desc: "Board Width" },
   height: { type: "integer", values: [3,4,5], desc: "Board Height" },
