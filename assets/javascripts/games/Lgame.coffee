@@ -8,21 +8,13 @@ window.game.title = "Game of L"
 window.game.asset = "Lgame"
 window.game.description = "This is L"
 window.game.type = "c"
-window.game.parameters = {
-  width: { type: "integer", values: [3,4,5], desc: "Board Width" },
-  height: { type: "integer", values: [3,4,5], desc: "Board Height" },
-  pieces: { type: "integer", values: [3,4,5], desc: "Number in a row" },
-}
+window.game.parameters = { }
 
 window.game.getInitialBoard = (p) ->
-  retval = ""
-  for a in [1..p.width]
-    for b in [1..p.height]
-      retval += " "
-  return retval
+  retval = 'wxx ox ox oog;turn=1;pos=19388'
 
 window.game.getDimensions = (p) ->
-  return [p.width, p.height]
+  return [3, 4]
 
 window.game.notifier = class extends GCAPI.GameNotifier
   drawBoard: (board, game) ->
