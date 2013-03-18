@@ -29,8 +29,10 @@ $.fn.extend
       retval += '<div class="three columns end">'
       retval += description
       retval += "<select id='custom" + n + "' name='" + n + "' >"
+      ival = parseInt(configurationHash[n])
       for value in i.values
-        retval += "<option value='" + value + "'>" + value + "</option>"
+        selected = if ival == value then "selected='selected'" else ""
+        retval += "<option #{selected} value='" + value + "'>" + value + "</option>"
       retval += "</select>"
       retval += "</div>"
       return retval
@@ -51,28 +53,28 @@ $.fn.extend
           <legend>Player Info</legend>
           <div class="row">
             <div class="three columns">
-              <input type='text' name='player1' placeholder='Player 1 Name' />
+              <input type='text' name='player1' #{"value='#{configurationHash["player1"]}'" if configurationHash["player1"]} placeholder='Player 1 Name' />
             </div>
             <div class="three columns">
               <div class="row collapse">
                 <div class="six columns">
-                  <a class='button expand prefix' id='p1-human'>Human</a>
+                  <a class='#{"secondary" if configurationHash['p1-type'] == 'computer'} button expand prefix' id='p1-human'>Human</a>
                 </div>
                 <div class="six columns">
-                  <a class='secondary button expand postfix' id='p1-comp'>Computer</a>
+                  <a class='#{"secondary" if configurationHash['p1-type'] != 'computer'} button expand prefix' id='p1-comp'>Computer</a>
                 </div>
               </div>
             </div>
             <div class="three columns">
-              <input type='text' name='player2' placeholder='Player 2 Name' />
+              <input type='text' name='player2' #{"value='#{configurationHash["player2"]}'" if configurationHash["player2"]} placeholder='Player 2 Name' />
             </div>
             <div class="three columns">
               <div class="row collapse">
                 <div class="six columns">
-                  <a class='button expand prefix' id='p2-human'>Human</a>
+                  <a class='#{"secondary" if configurationHash['p2-type'] == 'computer'} button expand prefix' id='p2-human'>Human</a>
                 </div>
                 <div class="six columns">
-                  <a class='secondary button expand postfix' id='p2-comp'>Computer</a>
+                  <a class='#{"secondary" if configurationHash['p2-type'] != 'computer'} button expand prefix' id='p2-comp'>Computer</a>
                 </div>
               </div>
             </div>
@@ -82,9 +84,11 @@ $.fn.extend
           <legend>Game Info</legend>
           #{gameInfo}
         </fieldset>
-        <input type="hidden" name="p1-type" id="p1-type" value="human" />
-        <input type="hidden" name="p2-type" id="p2-type" value="human" />
-        <input class="button" type="submit" value="Let's Play!" />
+        <input type="hidden" name="p1-type" id="p1-type" value="#{ if configurationHash['p1-type'] == "computer" then "computer" else "human"}" />
+        <input type="hidden" name="p2-type" id="p2-type" value="#{ if configurationHash['p2-type'] == "computer" then "computer" else "human"}" />
+        <input type="hidden" name="continue-game" id="continue-game" value="#{ if configurationHash['update-settings']? then "yes" else "no"}" />
+        <input class="button" type="submit" value="#{ if configurationHash['update-settings']? then "Continue Game" else "Let's Play!"}" />
+        #{ if configurationHash['update-settings'] then '<input class="button" type="submit" id="restartButton" value="New Game" />' else '' }
       </form>
     """
     c.html contents
@@ -108,6 +112,9 @@ $.fn.extend
       $('#p2-human').addClass('secondary')
       $('#p2-comp').removeClass('secondary')
       $('#p2-type').val('computer')
+
+    $('#restartButton').click (event) ->
+      $('#continue-game').val('no')
 
     return @
 
