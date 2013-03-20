@@ -55,3 +55,39 @@ And among all this make sure you use the same asset name. For example Tic Tac To
 for the coffescript file, the xml file, and its png. 
 
 Following this, you should be able to create a fantastic game!
+
+### To Contribute to the codebase
+
+Make sure you clone the repository with the following URL:
+```bash
+$ git clone git@github.com:GamesCrafters/Gamesman5.git
+```
+
+Then, when you want to add to the project, make a branch. 
+
+```bash
+$ git branch <your-branch>
+$ git checkout <your-branch>
+```
+Now, you will have some local changes to your branch. When you want to push to the 
+github repository (which you should do frequently), run the following command:
+
+```bash
+$ git push origin <your-branch>
+```
+
+As you work, some changes may be made to the master branch. In order to incorporate these changes into
+your branch, run the following commands.
+
+```bash
+$ git checkout <your-branch> # to make sure you are on your own branch
+$ git fetch origin
+$ git merge origin/master
+```
+
+This will then add several commits to your local copy, at which pount you should run:
+
+```bash
+$ git push origin <your-branch>
+```
+When you finally want to add your changes to the main repository, submit a pull request.
