@@ -122,6 +122,3 @@ window.drawVVH = (canvas, moveList) ->
 			i+= 30
 	plotValues()
 
-
-
-
