@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <title>GamesCrafters - <%= @title %></title>
+    <title><%= @title.nil? ? "" : @title + " - " %> GamesCrafters</title>
     <%= yield_content :head %>
   </head>
   <body>

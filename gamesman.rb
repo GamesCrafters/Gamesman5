@@ -66,7 +66,7 @@ class Gamesman < Sinatra::Base
                '/javascripts/jquery.cookie.js' ]
     js :config, [ '/js/config.js', '/js/GCAPI.js' ]
     js :play, [ '/javascripts/jcanvas.min.js', '/js/play.js', '/js/GCAPI.js',
-                '/js/ui.js', '/js/vvh.js' ]
+                '/js/ui.js', '/js/vvh.js', '/js/callWatcher.js' ]
 
     Dir.glob("assets/javascripts/games/*.{js,coffee}") do |file|
       parts = file.split(/[\/.]/)
@@ -79,10 +79,12 @@ class Gamesman < Sinatra::Base
   end
 
   get '/game/:name/new' do
+    @title = "Settings"
     erb :new
   end
 
   get '/game/:name/play' do
+    @title = "Play"
     response.headers['Access-Control-Allow-Origin'] = '*'
     erb :play2
   end
@@ -118,6 +120,7 @@ class Gamesman < Sinatra::Base
   end
 
   get '/' do
+    @title = "Choose a game"
     @games = {}
     Dir.glob("assets/xml/games/*.xml") do |file|
       parts = file.split('/')
