@@ -2,6 +2,7 @@ window.drawVVH = (canvas, moveList) ->
 	console.log moveList
 	c = canvas  	# change to c = canvas
 
+	# Positions
 	maxH = c.height
 	maxW = c.width
 	horCen = maxW / 2
@@ -13,6 +14,16 @@ window.drawVVH = (canvas, moveList) ->
 	padx = 18
 	pady = 5
 	disTop = 23
+	xLabelPad = 12.5
+	cenPad = .5
+	lastDotX = 0	# x position of the last Dot
+	lastDotY = 0	# y position of the last Dot
+
+	# Dot Colors
+
+	tieC = "rgb(255, 255, 255)"	# draw yellow
+	winC = "rgb(0, 127, 0)"	# winning green
+	loseC = "rgb(139, 0, 0)"	# losing red
 	
 
 	xlabel = ->				# labels moves until win
@@ -20,11 +31,13 @@ window.drawVVH = (canvas, moveList) ->
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
 	  ctx.fillStyle = "white"
-	  ctx.fillText "D", horCen, disTop - 12.5
+	  ctx.fillText "D", horCen, disTop - xLabelPad
 	  i = 0
 	  while i <= maxW/2
 	    if i % (cmax) is 0
-	   	  ctx.fillText i, maxW - i - padx, disTop		# right player
+
+		#if i <= (disTop - xLabelPad - cenPad) and i >= (disTop - xLabelPad + cenPad)
+	   	  ctx.fillText i, maxW - i - padx - 3, disTop		# right player
 	   	  ctx.fillText i, i + padx, disTop				# left player
 	    i++
 	xlabel()
@@ -81,3 +94,34 @@ window.drawVVH = (canvas, moveList) ->
 				ctx.stroke()
 			i += 10
 	grid()
+
+
+	# create a circle with the given move color 'c'
+
+	# the current canvas 'canvas'
+	# xpos = x position
+	# ypos = y position
+	# c = color (win==green, draw==yellow, lose==red)
+	drawDot = (canvas, xpos, ypos, c) ->
+		ctx = canvas.getContext("2d")
+		radius = 4
+		ctx.beginPath()
+		ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
+		ctx.fillStyle = c
+		ctx.fill()
+		ctx.lineWidth = 1
+		ctx.strokeStyle = "black"
+		ctx.stroke()
+
+
+	# plot circle onto canvas based on data
+	plotValues = ->
+		i = padx
+		while i < maxW
+			drawDot(c, i, i, loseC)
+			i+= 30
+	plotValues()
+
+
+
+
