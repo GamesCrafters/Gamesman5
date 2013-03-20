@@ -4,25 +4,28 @@ window.drawVVH = (canvas, moveList) ->
 
 	maxH = c.height
 	maxW = c.width
+	horCen = maxW / 2
 	xs = 10					# x-label interval
 	ys = 20					# y-lable interval
 	cmax = 30				# column spacing
 	rmax = 20 				# row spacing
 	moveNum = 0				# current turn number
-	padx = 15
+	padx = 18
 	pady = 5
+	disTop = 23
+	
 
 	xlabel = ->				# labels moves until win
 	  ctx = c.getContext("2d")
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
-	  ctx.fillStyle = "white"	
-	  ctx.fillText "D", canvas.width / 2, 5
+	  ctx.fillStyle = "white"
+	  ctx.fillText "D", horCen, disTop - 12.5
 	  i = 0
 	  while i <= maxW/2
 	    if i % (cmax) is 0
-	   	  ctx.fillText i, maxW - i - padx, 20		# right player
-	   	  ctx.fillText i, i + padx, 20				# left player
+	   	  ctx.fillText i, maxW - i - padx, disTop		# right player
+	   	  ctx.fillText i, i + padx, disTop				# left player
 	    i++
 	xlabel()
 
@@ -37,42 +40,44 @@ window.drawVVH = (canvas, moveList) ->
 		while i < (maxH * 3)
 	    	if i % ys is 0
 	      		y = i
-	      		ctx.fillText y, pady, 10 * (i + 3)
-	      		ctx.fillText y, maxW - pady, 10 * (i + 3)
+	      		ctx.fillText y, pady + 3, 10 * (i + 3)
+	      		ctx.fillText y, maxW - pady - 3, 10 * (i + 3)
 	    	i++
 	ylabel()
 	
 
 
-	practice =  ->
-		ctx = c.getContext("2d")
-		ctx.textBaseline = "middle"
-		ctx.textAlign = "center"
-		ctx.fillStle = "white"
+	#practice =  ->
+	#	ctx = c.getContext("2d")
+	#	ctx.textBaseline = "middle"
+	#	ctx.textAlign = "center"
+	#	ctx.fillStle = "white"
 
-		moves = null
-		if moveList != null
-			moves = moveList
+	#	moves = null
+	#	if moveList != null
+	#		moves = moveList
 
-		ctx.fillText moves, 50, 50
-	practice()
+	#	ctx.fillText moves, 50, 50
+	#practice()
 
 	# Draw the Grid
 	grid = ->
 		i = padx
 		ctx = c.getContext("2d")
 		ctx.strokeStyle = "white"
+		ctx.lineWidth = 1
 		while i < maxW - padx
-			if i % 70 is 0
-				i += 10
+
+			if i >= horCen - .5 and i <= horCen + .5 
+				ctx.beginPath()
+				ctx.moveTo i, disTop - 2
+				ctx.lineTo i, maxH - 5
+				ctx.stroke()
 			else
-				ctx.moveTo i, 25
-			ctx.lineTo i, maxH
-			ctx.stroke()
+				#ctx.fillText i, i, disTop + i * 2
+				ctx.beginPath()
+				ctx.moveTo i, disTop + 5
+				ctx.lineTo i, maxH - 5
+				ctx.stroke()
 			i += 10
 	grid()
-
-
-
-
-
