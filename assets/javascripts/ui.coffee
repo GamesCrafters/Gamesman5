@@ -37,7 +37,7 @@ window.GCAPI.Ui = class
   resizeVVH: ->
     h = window.innerHeight / 1.2
     w = h / 2
-    left = (h / 5.7) - 1
+    left = (h / 5.7)
 
     @vvhPanel.width = w
     @vvhPanel.height = h
