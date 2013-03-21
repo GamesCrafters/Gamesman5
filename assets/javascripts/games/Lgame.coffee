@@ -4,7 +4,7 @@
 # and will play an important role in things.
 window.game or= {}
 
-window.game.title = "Game of L"
+window.game.title = "L Game"
 window.game.asset = "Lgame"
 window.game.description = "This is L"
 window.game.type = "c"
