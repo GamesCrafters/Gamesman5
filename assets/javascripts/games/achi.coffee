@@ -19,6 +19,7 @@ window.game.getInitialBoard = (p) ->
   for a in [1..p.width]
     for b in [1..p.height]
       retval += " "
+  retval += ";pos=0"
   return retval
   
 window.game.getDimensions = (p) ->
@@ -27,12 +28,20 @@ window.game.getDimensions = (p) ->
 window.game.notifier = class extends GCAPI.GameNotifier
   drawBoard: (board, game) ->
     me = this
+    move_num = 0
+    for row in [0..@conf.height-1]
+      start = row*@conf.width
+      for column in [0..@conf.width-1]
+        index = start + column
+        if board[index] != " "
+          move_num++
     x_pixels = Math.floor (@canvas.width() / @conf.width)
     y_pixels = Math.floor (@canvas.height() / @conf.height)
-    x_offset = .1 * x_pixels
-    y_offset = .1 * y_pixels
+    x_offset = .3 * x_pixels
+    y_offset = .3 * y_pixels
     xpos = x_offset
     ypos = y_offset
+    #console.log me.getPlayerName
     
     for column in [0..@conf.width-1]
       xpos = @canvas.width()/(@conf.width-1)*column
@@ -75,6 +84,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
     
     for row in [0..@conf.height-1]
       ypos = @canvas.height()/(@conf.height-1)*row
+      start = row*@conf.width
       if row == 0 
         ypos += y_offset
       else if row == @conf.height-1
@@ -85,14 +95,39 @@ window.game.notifier = class extends GCAPI.GameNotifier
           xpos += x_offset
         else if column == @conf.width-1
           xpos -= x_offset
-        console.log xpos
+        #console.log xpos
         @canvas.drawArc
           fillStyle: "#000",
           x: xpos, y: ypos,
           radius: 10,
           start: 0, end: 360
-
         
+        index = start + column
+        char = board[index]
+
+        change = x_pixels * 0.1
+        color = "#FFF"
+        if char == "X" or char == "x"
+          color = "#F00"
+        else if char == "O" or char == "o"
+          color = "#00F"
+        if color != "#FFF" && move_num < 6
+          @canvas.drawArc
+            fillStyle: color
+            strokeStyle: "#000"
+            strokeWidth: 3
+            x: xpos , y: ypos 
+            radius: x_pixels / 4
+            layer: true
+        else if move_num > 5
+          if color == "#F00"
+            @canvas.drawArc
+              fillStyle: "#FFF"
+              strokeStyle: "#000"
+              strokeWidth: 3
+              x: xpos, y: ypos
+              radius: x_pixels / 4
+              layer: true
 
   drawMoves: (data, game) ->
     x_pixels = Math.floor (game.notifier.canvas.width() / game.notifier.conf.width)
@@ -108,7 +143,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
       if game.showValueMoves
         color = game.getColor(move, data)
-        console.log color
+        #console.log color
 
       column = row = 0
       if game.isC()
@@ -121,17 +156,25 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
       xpos = x_pixels * column
       ypos = y_pixels * row
+      x_offset = .2 * x_pixels
+      y_offset = .2 * y_pixels
+      if column == @conf.width-1
+        xpos += 2*x_offset
+      else if column != 0
+        xpos += x_offset
+      if row == @conf.width-1
+        ypos += 2* y_offset
+      else if row != 0
+        ypos += y_offset
 
-      game.notifier.canvas.drawRect
+      game.notifier.canvas.drawArc
         layer: true
         name: move.move
-        fillStyle: "#7F7F7F"
+        fillStyle: "#000"
         strokeStyle: "#000"
         strokeWidth: 3
-        x: xpos, y: ypos
-        width: x_pixels
-        height: y_pixels
-        fromCenter: false
+        x: xpos + x_pixels/2 - x_offset, y: ypos + y_pixels/2 - y_offset
+        radius: 10
         click: (layer) ->
           game.makeMove window.moves[layer.name]
 

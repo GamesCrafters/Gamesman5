@@ -5,3 +5,4 @@
 #= require play
 #= require jcanvas.min
 #= require ui
+#= require helpers
