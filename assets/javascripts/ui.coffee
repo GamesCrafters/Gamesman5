@@ -1,6 +1,6 @@
 window.GCAPI or= {}
 
-window.GCAPI.Ui = class
+class window.GCAPI.Ui
   constructor: (@game, @canvas, @controlPanel, @vvhPanel, @coverCanvas,
                 @status, @bg, @ratio) ->
     @_displayVVH = false
