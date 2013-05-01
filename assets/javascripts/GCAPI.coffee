@@ -330,3 +330,19 @@ window.GCAPI.Game = class Game
   toggleValueMoves: () ->
     @showValueMoves = !@showValueMoves
     @updateBoard()
+    
+  drawArrow: (x, y, len, theta) ->
+    $("canvas").drawLine({
+      strokeStyle: "#000",
+      strokeWidth: 1,
+      x1: x, y1: y,
+      x2: x + len/6 * Math.sin(theta), y2: y - len/6 * Math.cos(theta),
+      x3: x + 2/3*len * Math.cos(theta) + len/6 * Math.sin(theta), y3: y - len/6 * Math.cos(theta) + 2/3 * len * Math.sin(theta),
+      x4: x + 2/3*len*Math.cos(theta) + len/3*Math.sin(theta), y4: y - len/3*Math.cos(theta) + 2/3*len*Math.sin(theta),
+      x5: x + len*Math.cos(theta) + len/12*Math.sin(theta), y5: y - len/12*Math.cos(theta) + len*Math.sin(theta), 
+      x6: x + 2/3*len*Math.cos(theta) - len/6*Math.sin(theta), y6: y + len/6*Math.cos(theta) + 2/3*len*Math.sin(theta),
+      x7: x + 2/3*len*Math.cos(theta), y7: y + 2/3*len*Math.sin(theta),
+      x8: x, y8: y
+    });
+    
+  
