@@ -24,21 +24,26 @@ window.drawVVH = (canvas, moveList) ->
 	tempBestMoveX = null					
 	tempBestMoveY = null					
 	prevBestMoveX = null
+	prevBestMoveY = null
 
 	#Grid Spacing
 	colSpace = null				
 	rowSpace = null				
 	padx = 15
 	pady = 5
-	disTop = 23
+	disTop = 25
 
 	#Labeling
 	xLabelPad = 12.5
 	yLabelPad = 0
 	cenPad = 10
 
+	#Dot Drawing
+	dotDefault = disTop + 3
+	turnPadding = 25
+
 	# Colors
-	tieC = "rgb(255, 255, 255)"	# draw yellow
+	tieC = "rgb(255, 255, 0)"	# draw yellow
 	winC = "rgb(0, 127, 0)"	# winning green
 	loseC = "rgb(139, 0, 0)"	# losing red
 	textcolor = "white"
@@ -188,14 +193,14 @@ window.drawVVH = (canvas, moveList) ->
 		ctx.lineWidth = 1
 		label = adjRemote
 		while label >= 0
-			ctx.moveTo i, 25
+			ctx.moveTo i, disTop
 			ctx.lineTo i, (maxH - pady)
 			ctx.stroke()
 			i += colSpace
 			label -= 1
 		label = adjRemote
 		while label >= 0
-			ctx.moveTo j, 25
+			ctx.moveTo j, disTop
 			ctx.lineTo j, (maxH - pady)
 			ctx.stroke()
 			j -= colSpace
@@ -215,6 +220,49 @@ window.drawVVH = (canvas, moveList) ->
 			xlabel()
 
 			grid()
+
+	drawDot = (remoteness, value, turn) ->
+		color = null
+		xpos = null
+		ypos = dotDefault + (turnPadding * turn)
+		turnRemote = remoteness
+		radius = 4
+
+		ctx = c.getContext("2d")
+		if value is "win"
+			color = winC
+		else if value is "lose"
+			color = loseC
+		else 
+			color = tieC
+
+		if turn % 2 is 0
+			xpos = horCen - ((maxRemote - turnRemote) * colSpace)
+			ctx.beginPath()
+			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
+			ctx.fillStyle = color
+			ctx.fill()
+			ctx.lineWidth = 1
+			ctx.strokeStyle = "black"
+			ctx.stroke()
+		else
+			xpos = horCen + ((maxRemote - turnRemote) * colSpace)
+			ctx.beginPath()
+			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
+			ctx.fillStyle = color
+			ctx.fill()
+			ctx.lineWidth = 1
+			ctx.strokeStyle = "black"
+			ctx.stroke()
+
+
+	drawDots = (turn) ->
+
+		if turn isnt 0
+			drawDot(prevBestMoveX, prevBestMoveVal, turn - 1)
+
+		drawDot(tempBestMoveX, tempBestMoveVal, turn)
+
 
 	###
 	Updates the VVH after every turn.
@@ -239,18 +287,24 @@ window.drawVVH = (canvas, moveList) ->
 				setTempSelectedMove(i)			
 				setTempBestMove(i)
 
-				if i isnt 0
+				#if i isnt 0
 					#drawLine()
 
-				#drawDots()
+				drawDots(i)
 
 				prevBestMoveX = tempBestMoveX
+				prevBestMoveY = tempBestMoveY
 				prevBestMoveVal = tempBestMoveVal
 
 				console.log "tempSelectedMoveVal " + i + ": " + tempSelectedMoveVal
+
 				console.log "tempBestMoveVal " + i + ": " + tempBestMoveVal
 				console.log "tempBestMoveX " + i + ": " + tempBestMoveX
 				console.log "tempBestMoveY " + i + ": " + tempBestMoveY
+
+				console.log "prevBestMoveVal " + i + ": " + prevBestMoveVal
+				console.log "prevBestMoveX " + i + ": " + prevBestMoveX
+				console.log "prevBestMoveY " + i + ": " + prevBestMoveY
 
 				i += 1
 
