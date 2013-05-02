@@ -323,7 +323,8 @@ window.drawVVH = (canvas, moveList) ->
 		ctx.stroke()
 
 	###
-	Draws a line based color connecting the previous move and the most recent move
+	Draws a colored line based using data from the previous move as well as
+	the most recent move
 	###
 	drawLine = (lineVal, turn) ->
 		
@@ -331,6 +332,12 @@ window.drawVVH = (canvas, moveList) ->
 		xend = null
 		ystart = linePadding + (prevBestMoveY * turnPadding)
 		yend = linePadding + (tempBestMoveY * turnPadding)
+
+		firstPlayerStart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+		secondPlayerStart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+		firstPlayerEnd = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+		secondPlayerEnd = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+
 		color = null
 
 		if lineVal is "win"
@@ -343,73 +350,72 @@ window.drawVVH = (canvas, moveList) ->
 		if prevBestMoveVal is "tie"
 
 			if tempBestMoveVal is "tie"
-				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = firstPlayerStart
+				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = secondPlayerStart
+				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 			else if turn % 2 is 0
 
-				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = firstPlayerStart
+				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = secondPlayerStart
+				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 			else 
 
-				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = firstPlayerStart
+				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = secondPlayerStart
+				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 		else if tempBestMoveVal is "tie"
 
 			if turn % 2 is 0
-				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = secondPlayerStart
+				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = secondPlayerStart
+				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 			else
-				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = firstPlayerStart
+				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
-				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+				xstart = firstPlayerStart
+				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 		else if turn % 2 is 0
-			xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
-			xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+			xstart = secondPlayerStart
+			xend = secondPlayerEnd
 		else
-			xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
-			xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+			xstart = firstPlayerStart
+			xend = firstPlayerEnd
 
 		sketchLine(xstart, xend, ystart, yend, color)
-
 
 	###
 	Updates the VVH after every turn.
@@ -421,12 +427,11 @@ window.drawVVH = (canvas, moveList) ->
 		# This just ensures that none of this is accessed when the canvas is first created
 		if moveList[turnNum].moves.length isnt 0
 
-			console.log "turnNum: " + turnNum
-
 			#Draw the Grid
 			maxVal()
 			drawGrid()
 
+			#Redraw the VVH on the grid
 			i = 0
 
 			while i < turnNum + 1
