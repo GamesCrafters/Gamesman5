@@ -261,7 +261,8 @@ window.drawVVH = (canvas, moveList) ->
 
 		if value is "tie"
 
-			xpos = horCen - ((maxRemote - turnRemote) * colSpace)
+			xpos = horCen + ((maxRemote - turnRemote) * colSpace)
+
 			ctx.beginPath()
 			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
 			ctx.fillStyle = color
@@ -270,7 +271,8 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.strokeStyle = "black"
 			ctx.stroke()
 
-			xpos = horCen + ((maxRemote - turnRemote) * colSpace)
+			xpos = horCen - ((maxRemote - turnRemote) * colSpace)
+
 			ctx.beginPath()
 			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
 			ctx.fillStyle = color
@@ -280,7 +282,13 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.stroke()
 
 		else if turn % 2 is 0
-			xpos = horCen - ((maxRemote - turnRemote) * colSpace)
+
+			if value is "lose"
+				xpos = horCen + ((maxRemote - turnRemote) * colSpace)
+
+			else 
+				xpos = horCen - ((maxRemote - turnRemote) * colSpace)
+
 			ctx.beginPath()
 			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
 			ctx.fillStyle = color
@@ -290,7 +298,13 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.stroke()
 
 		else
-			xpos = horCen + ((maxRemote - turnRemote) * colSpace)
+
+			if value is "lose"
+				xpos = horCen - ((maxRemote - turnRemote) * colSpace)
+
+			else
+				xpos = horCen + ((maxRemote - turnRemote) * colSpace)
+
 			ctx.beginPath()
 			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
 			ctx.fillStyle = color
@@ -333,10 +347,10 @@ window.drawVVH = (canvas, moveList) ->
 		ystart = linePadding + (prevBestMoveY * turnPadding)
 		yend = linePadding + (tempBestMoveY * turnPadding)
 
-		firstPlayerStart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
-		secondPlayerStart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
-		firstPlayerEnd = horCen + ((maxRemote - tempBestMoveX) * colSpace)
-		secondPlayerEnd = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+		firstPlayerStart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+		secondPlayerStart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+		firstPlayerEnd = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+		secondPlayerEnd = horCen + ((maxRemote - tempBestMoveX) * colSpace)
 
 		color = null
 
@@ -363,59 +377,90 @@ window.drawVVH = (canvas, moveList) ->
 			else if turn % 2 is 0
 
 				xstart = firstPlayerStart
-				xend = secondPlayerEnd
+				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 				xstart = secondPlayerStart
-				xend = secondPlayerEnd
+				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 			else 
 
 				xstart = firstPlayerStart
-				xend = firstPlayerEnd
+				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 				xstart = secondPlayerStart
-				xend = firstPlayerEnd
+				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 		else if tempBestMoveVal is "tie"
 
 			if turn % 2 is 0
-				xstart = secondPlayerStart
+				xstart = firstPlayerStart
 				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-				xstart = secondPlayerStart
+				xstart = firstPlayerStart
 				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
 			else
-				xstart = firstPlayerStart
+				xstart = secondPlayerStart
 				xend = secondPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-				xstart = firstPlayerStart
+				xstart = secondPlayerStart
 				xend = firstPlayerEnd
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-		else if turn % 2 is 0
-			xstart = secondPlayerStart
-			xend = secondPlayerEnd
-		else
-			xstart = firstPlayerStart
-			xend = firstPlayerEnd
+		else if prevBestMoveVal is "win"
 
-		sketchLine(xstart, xend, ystart, yend, color)
+			if lineVal is "win" and turn % 2 is 0
+				xstart = firstPlayerStart
+				xend = secondPlayerEnd
+
+			else if lineVal is "win" and turn % 2 is 1
+				xstart = secondPlayerStart
+				xend = firstPlayerEnd
+
+			else if lineVal is "lose" and turn % 2 is 0
+				xstart = firstPlayerStart
+				xend = firstPlayerEnd	
+
+			else
+				xstart = secondPlayerStart
+				xend = secondPlayerEnd
+
+			sketchLine(xstart, xend, ystart, yend, color)
+
+		else if prevBestMoveVal is "lose"
+
+			if lineVal is "lose" and turn % 2 is 0
+				xstart = secondPlayerStart
+				xend = firstPlayerEnd
+
+			else if lineVal	is "lose" and turn % 2 is 1
+				xstart = firstPlayerStart
+				xend = secondPlayerEnd
+
+			else if lineVal is "win" and turn % 2 is 0
+				xstart = secondPlayerStart
+				xend = secondPlayerEnd
+
+			else
+				xstart = firstPlayerStart
+				xend = firstPlayerEnd
+
+			sketchLine(xstart, xend, ystart, yend, color)
 
 	###
 	Updates the VVH after every turn.
