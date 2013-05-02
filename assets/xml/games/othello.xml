@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<game>
+  <title>Othello</title>
+  <description>
+    Othello is a game that you stuff in.
+  </description>
+  <tags>
+    <two-player />
+    <dartboard />
+    <solved />
+    <play />
+  </tags>
+</game>
