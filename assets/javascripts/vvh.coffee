@@ -118,7 +118,7 @@ window.drawVVH = (canvas, moveList) ->
 	plotValues = ->
 		i = padx
 		while i < maxW
-			drawDot(c, i, i, loseC)
+			drawDot(c, i, i, winC)
 			i+= 30
 	plotValues()
 
