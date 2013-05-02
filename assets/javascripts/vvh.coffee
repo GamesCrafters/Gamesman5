@@ -1,124 +1,252 @@
 window.drawVVH = (canvas, moveList) ->
-	console.log moveList
-	c = canvas  	# change to c = canvas
 
-	# Positions
+	console.log moveList
+	c = canvas
+
+	#Game info
+	turnNum = 0
+	maxRemote = null
+
+	#Move values
+	tempSelectedMoveVal = null
+	tempBestMoveVal = null
+
+	#Temporary variables
+	tempMoveVal = null
+	tempMoveX = null
+	tempMoveY = null
+
+	#Positions
 	maxH = c.height
 	maxW = c.width
-	horCen = maxW / 2
-	xs = 10					# x-label interval
-	ys = 20					# y-lable interval
-	cmax = 30				# column spacing
-	rmax = 20 				# row spacing
-	moveNum = 0				# current turn number
-	padx = 18
+	horCen = (maxW / 2)
+	tempBestMoveX = null					
+	tempBestMoveY = null					
+
+	#Grid Spacing
+	colSpace = null				
+	rowSpace = null				
+	padx = 15
 	pady = 5
 	disTop = 23
+
+	#Labeling
 	xLabelPad = 12.5
-	cenPad = .5
-	lastDotX = 0	# x position of the last Dot
-	lastDotY = 0	# y position of the last Dot
+	yLabelPad = 0
+	cenPad = 10
 
-	# Dot Colors
-
+	# Colors
 	tieC = "rgb(255, 255, 255)"	# draw yellow
 	winC = "rgb(0, 127, 0)"	# winning green
 	loseC = "rgb(139, 0, 0)"	# losing red
-	
+	textcolor = "white"
+	linecolor = "white"
 
-	xlabel = ->				# labels moves until win
+	###
+	Determines which turn it is
+	###
+	setTurnNum = ->
+
+		turnNum = (moveList.length - 1)
+
+	###
+	Gets the color of the selected move to use in drawing the line between
+	points on the VVH. Because the turns alternate, in order to draw the
+	line with the correct color, it's necessary to invert the color.
+	###
+	setTempSelectedMove = (turn) ->
+
+		tempMoveVal = moveList[turn].board.value
+
+		if tempMoveVal == "lose"
+			tempSelectedMoveVal = "win"
+
+		else if tempMoveVal == "win"
+			tempSelectedMoveVal = "lose"
+
+		else
+			tempSelectedMoveVal = tempMoveVal
+
+	###
+	Sets the tempBestMove variable values to those associated
+	with the best move of the turn passed in.
+	###
+	setTempBestMove = (turn) ->
+
+		loopTempX = null
+		loopTempVal = null
+
+		tempBestMoveY = (turn)
+
+		i = 0
+
+		###
+		console.log turnNum
+		console.log i
+		console.log moveList
+		###
+
+		tempMoveVal = moveList[turn].moves[i].value
+		tempMoveX = moveList[turn].moves[i].remoteness
+
+		i += 1;
+
+		while i < (moveList[turn].moves.length)
+
+			loopTempX = moveList[turn].moves[i].remoteness
+			loopTempVal = moveList[turn].moves[i].value
+
+			if tempMoveVal == "lose"
+
+				if loopTempVal == "lose"
+					if loopTempX > tempMoveX
+						tempMoveX = loopTempX
+				else if loopTempVal == "tie"
+					tempMoveX = loopTempX
+					tempMoveVal = loopTempVal
+				else
+					tempMoveX = loopTempX
+					tempMoveVal = loopTempVal
+
+			else if tempMoveVal == "tie"
+
+				if loopTempVal == "win"
+					tempMoveX = loopTempX
+					tempMoveVal = loopTempVal
+
+			else
+
+				if loopTempVal == "win"
+					if loopTempX < tempMoveX
+						tempMoveX = loopTempX
+
+			i += 1
+
+		tempBestMoveX = tempMoveX
+		tempBestMoveVal = tempMoveVal
+		
+	###
+	Determines the maximum number of moves until the endgame based on the initial
+	moveList passed in. Add one to the largest value in the initial moveList so
+	that there are (largest value in moveList) number of spots on each side of
+	the grid's center line
+	###
+	maxVal = ->
+
+		i = 0
+
+		maxRemote = moveList[0].moves[i].remoteness
+
+		i += 1
+
+		while i < (moveList[0].moves.length)
+
+			if moveList[0].moves[i].remoteness > maxRemote
+				maxRemote = moveList[0].moves[i].remoteness
+
+			i += 1
+
+		maxRemote +=1
+
+	###
+	Draws the x-labels displaying how many moves until win for each
+	player.
+	###
+	xlabel = ->
 	  ctx = c.getContext("2d")
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
-	  ctx.fillStyle = "white"
-	  ctx.fillText "D", horCen, disTop - xLabelPad
-	  i = 0
-	  while i <= maxW/2
-	    if i % (cmax) is 0
+	  ctx.fillStyle = textcolor	
+	  label = maxRemote
+	  i = horCen
+	  j = horCen
+	  ctx.fillText "D", horCen, 10
+	  while label >= 0
+	  	if label % rowSpace is 0
+		   	ctx.fillText label, i, 20
+		   	ctx.fillText label, j, 20
+	    i += colSpace
+	    j -= colSpace
+	    label--
 
-		#if i <= (disTop - xLabelPad - cenPad) and i >= (disTop - xLabelPad + cenPad)
-	   	  ctx.fillText i, maxW - i - padx - 3, disTop		# right player
-	   	  ctx.fillText i, i + padx, disTop				# left player
-	    i++
-	xlabel()
-
-
-	ylabel = ->				# labels move turns
-		ctx = c.getContext("2d")
-		ctx.textBaseline = "middle"
-		ctx.textAlign = "center"
-		ctx.fillStyle = "white"
-		i = 0
-		y = 0
-		while i < (maxH * 3)
-	    	if i % ys is 0
-	      		y = i
-	      		ctx.fillText y, pady + 3, 10 * (i + 3)
-	      		ctx.fillText y, maxW - pady - 3, 10 * (i + 3)
-	    	i++
-	ylabel()
-	
-
-
-	#practice =  ->
-	#	ctx = c.getContext("2d")
-	#	ctx.textBaseline = "middle"
-	#	ctx.textAlign = "center"
-	#	ctx.fillStle = "white"
-
-	#	moves = null
-	#	if moveList != null
-	#		moves = moveList
-
-	#	ctx.fillText moves, 50, 50
-	#practice()
-
-	# Draw the Grid
+	###
+	Draws the gridlines
+	###	
 	grid = ->
-		i = padx
+		i = horCen 					# player 1 half of grid
+		j = horCen 					# player 2 half of grid
+		adjRemote = null			# the adjusted vale of Max Remote
+		if maxRemote > 15
+			adjRemote = maxRemote / 10
+			colSpace = (horCen - padx)/adjRemote
+		else 
+			adjRemote = maxRemote
 		ctx = c.getContext("2d")
-		ctx.strokeStyle = "white"
+		ctx.strokeStyle = linecolor
 		ctx.lineWidth = 1
-		while i < maxW - padx
+		label = adjRemote
+		while label >= 0
+			ctx.moveTo i, 25
+			ctx.lineTo i, (maxH - pady)
+			ctx.stroke()
+			i += colSpace
+			label -= 1
+		label = adjRemote
+		while label >= 0
+			ctx.moveTo j, 25
+			ctx.lineTo j, (maxH - pady)
+			ctx.stroke()
+			j -= colSpace
+			label -= 1
 
-			if i >= horCen - .5 and i <= horCen + .5 
-				ctx.beginPath()
-				ctx.moveTo i, disTop - 2
-				ctx.lineTo i, maxH - 5
-				ctx.stroke()
-			else
-				#ctx.fillText i, i, disTop + i * 2
-				ctx.beginPath()
-				ctx.moveTo i, disTop + 5
-				ctx.lineTo i, maxH - 5
-				ctx.stroke()
-			i += 10
-	grid()
-
-
-	# create a circle with the given move color 'c'
-
-	# the current canvas 'canvas'
-	# xpos = x position
-	# ypos = y position
-	# c = color (win==green, draw==yellow, lose==red)
-	drawDot = (canvas, xpos, ypos, c) ->
-		ctx = canvas.getContext("2d")
-		radius = 4
-		ctx.beginPath()
-		ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
-		ctx.fillStyle = c
-		ctx.fill()
-		ctx.lineWidth = 1
-		ctx.strokeStyle = "black"
-		ctx.stroke()
+	###
+	Draws the gridlines as well as the x-labels across the top.
+	###
+	drawGrid = ->
 
 
-	# plot circle onto canvas based on data
-	plotValues = ->
-		i = padx
-		while i < maxW
-			drawDot(c, i, i, winC)
-			i+= 30
-	plotValues()
+			# will calculate the max remoteness from the move list
+			#maxRemote = 9
+			colSpace = (horCen - padx)/maxRemote 
+			rowSpace = Math.floor(maxRemote/4)
+
+			xlabel()
+
+			grid()
+
+	###
+	Updates the VVH after every turn.
+	###
+	draw = ->
+
+		setTurnNum();
+
+		# This just ensures that none of this is accessed when the canvas is first created
+		if moveList[turnNum].moves.length isnt 0
+
+			console.log "turnNum: " + turnNum
+
+			#Draw the Grid
+			maxVal()
+			drawGrid()
+
+			i = 0
+
+			while i < turnNum + 1
+
+				setTempSelectedMove(i)			
+				setTempBestMove(i)
+
+				#drawLine()
+
+				#drawDot()
+
+				console.log "tempSelectedMoveVal " + i + ": " + tempSelectedMoveVal
+				console.log "tempBestMoveVal " + i + ": " + tempBestMoveVal
+				console.log "tempBestMoveX " + i + ": " + tempBestMoveX
+				console.log "tempBestMoveY " + i + ": " + tempBestMoveY
+
+				i += 1
+
+	draw()
 
