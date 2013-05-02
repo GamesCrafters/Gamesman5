@@ -28,19 +28,22 @@ window.drawVVH = (canvas, moveList) ->
 
 	#Grid Spacing
 	colSpace = null				
-	rowSpace = null				
+	rowSpace = null				#determines the spacing of the x-labels on top of grid		
 	padx = 15
 	pady = 5
 	disTop = 25
 
 	#Labeling
-	xLabelPad = 12.5
-	yLabelPad = 0
+	xLabelPad = disTop - 5
+	yLabelPad = disTop + 3
 	cenPad = 10
 
 	#Dot Drawing
 	dotDefault = disTop + 3
 	turnPadding = 25
+
+	#Line Drawing
+	linePadding = disTop + 2.5
 
 	# Colors
 	tieC = "rgb(255, 255, 0)"	# draw yellow
@@ -76,7 +79,8 @@ window.drawVVH = (canvas, moveList) ->
 
 	###
 	Sets the tempBestMove variable values to those associated
-	with the best move of the turn passed in.
+	with the best move of the turn passed in. Add one to the 
+	remoteness value to account for difference in indexing.
 	###
 	setTempBestMove = (turn) ->
 
@@ -129,12 +133,12 @@ window.drawVVH = (canvas, moveList) ->
 
 			i += 1
 
-		tempBestMoveX = tempMoveX
+		tempBestMoveX = tempMoveX + 1
 		tempBestMoveVal = tempMoveVal
 		
 	###
 	Determines the maximum number of moves until the endgame based on the initial
-	moveList passed in. Add one to the largest value in the initial moveList so
+	moveList passed in. Add two to the largest value in the initial moveList so
 	that there are (largest value in moveList) number of spots on each side of
 	the grid's center line
 	###
@@ -153,7 +157,7 @@ window.drawVVH = (canvas, moveList) ->
 
 			i += 1
 
-		maxRemote +=1
+		maxRemote += 2
 
 	###
 	Draws the x-labels displaying how many moves until win for each
@@ -169,12 +173,26 @@ window.drawVVH = (canvas, moveList) ->
 	  j = horCen
 	  ctx.fillText "D", horCen, 10
 	  while label >= 0
-	  	if label % rowSpace is 0
-		   	ctx.fillText label, i, 20
-		   	ctx.fillText label, j, 20
+	  	if label % rowSpace is 0 
+		   	ctx.fillText label, i, xLabelPad
+		   	ctx.fillText label, j, xLabelPad
 	    i += colSpace
 	    j -= colSpace
 	    label--
+
+	###
+	Draws the y-labels along the side of the grid, one
+	value at a time.
+	###
+	ylabel = (turn) ->
+	  ctx = c.getContext("2d")
+	  ctx.textBaseline = "middle"
+	  ctx.textAlign = "center"
+	  ctx.fillStyle = textcolor	
+	  label = turn + 1
+
+	  ctx.fillText label, pady, yLabelPad + (turn * turnPadding)
+	  ctx.fillText label, maxW - pady, yLabelPad + (turn * turnPadding)
 
 	###
 	Draws the gridlines
@@ -221,6 +239,11 @@ window.drawVVH = (canvas, moveList) ->
 
 			grid()
 
+
+	###
+	Draws individual dots based on the remoteness, the move value,
+	and the turn number.
+	###
 	drawDot = (remoteness, value, turn) ->
 		color = null
 		xpos = null
@@ -236,7 +259,8 @@ window.drawVVH = (canvas, moveList) ->
 		else 
 			color = tieC
 
-		if turn % 2 is 0
+		if value is "tie"
+
 			xpos = horCen - ((maxRemote - turnRemote) * colSpace)
 			ctx.beginPath()
 			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
@@ -245,6 +269,26 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.lineWidth = 1
 			ctx.strokeStyle = "black"
 			ctx.stroke()
+
+			xpos = horCen + ((maxRemote - turnRemote) * colSpace)
+			ctx.beginPath()
+			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
+			ctx.fillStyle = color
+			ctx.fill()
+			ctx.lineWidth = 1
+			ctx.strokeStyle = "black"
+			ctx.stroke()
+
+		else if turn % 2 is 0
+			xpos = horCen - ((maxRemote - turnRemote) * colSpace)
+			ctx.beginPath()
+			ctx.arc xpos, ypos, radius, 0, 2 * Math.PI, false
+			ctx.fillStyle = color
+			ctx.fill()
+			ctx.lineWidth = 1
+			ctx.strokeStyle = "black"
+			ctx.stroke()
+
 		else
 			xpos = horCen + ((maxRemote - turnRemote) * colSpace)
 			ctx.beginPath()
@@ -255,13 +299,159 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.strokeStyle = "black"
 			ctx.stroke()
 
-
+	###
+	Handles drawing all of the dots necessary for the given turn.
+	###
 	drawDots = (turn) ->
 
 		if turn isnt 0
 			drawDot(prevBestMoveX, prevBestMoveVal, turn - 1)
 
 		drawDot(tempBestMoveX, tempBestMoveVal, turn)
+		ylabel(turn)
+
+	###
+	Draws a line based color connecting the previous move and the most recent move
+	###
+	drawLine = (lineVal, turn) ->
+		
+		xstart = null
+		xend = null
+		ystart = linePadding + (prevBestMoveY * turnPadding)
+		yend = linePadding + (tempBestMoveY * turnPadding)
+		color = null
+
+		if lineVal is "win"
+			color = winC
+		else if lineVal is "lose"
+			color = loseC
+		else 
+			color = tieC
+
+		if prevBestMoveVal is "tie"
+
+			if tempBestMoveVal is "tie"
+				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+			else if turn % 2 is 0
+
+				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+			else 
+
+				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+		else if tempBestMoveVal is "tie"
+
+			if turn % 2 is 0
+				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+			else
+				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+
+				ctx = c.getContext("2d")
+				ctx.strokeStyle = color
+				ctx.lineWidth = 1
+				ctx.moveTo xstart, ystart
+				ctx.lineTo xend, yend
+				ctx.stroke()
+
+		else if turn % 2 is 0
+			xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
+			xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
+		else
+			xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
+			xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
+
+		ctx = c.getContext("2d")
+		ctx.strokeStyle = color
+		ctx.lineWidth = 1
+		ctx.moveTo xstart, ystart
+		ctx.lineTo xend, yend
+		ctx.stroke()
 
 
 	###
@@ -287,8 +477,8 @@ window.drawVVH = (canvas, moveList) ->
 				setTempSelectedMove(i)			
 				setTempBestMove(i)
 
-				#if i isnt 0
-					#drawLine()
+				if i isnt 0
+					drawLine(tempSelectedMoveVal, i)
 
 				drawDots(i)
 
