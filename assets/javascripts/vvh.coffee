@@ -8,7 +8,7 @@ window.drawVVH = (canvas, moveList) ->
 	maxRemote = null
 
 	#Move values
-	tempSelectedMoveVal = null
+	lineColor = null
 	tempBestMoveVal = null
 	prevBestMoveVal = null
 
@@ -64,18 +64,18 @@ window.drawVVH = (canvas, moveList) ->
 	points on the VVH. Because the turns alternate, in order to draw the
 	line with the correct color, it's necessary to invert the color.
 	###
-	setTempSelectedMove = (turn) ->
+	setLineColor = (turn) ->
 
 		tempMoveVal = moveList[turn].board.value
 
 		if tempMoveVal == "lose"
-			tempSelectedMoveVal = "win"
+			lineColor = "win"
 
 		else if tempMoveVal == "win"
-			tempSelectedMoveVal = "lose"
+			lineColor = "lose"
 
 		else
-			tempSelectedMoveVal = tempMoveVal
+			lineColor = tempMoveVal
 
 	###
 	Sets the tempBestMove variable values to those associated
@@ -311,6 +311,18 @@ window.drawVVH = (canvas, moveList) ->
 		ylabel(turn)
 
 	###
+	Slaps one line onto the grid.
+	###
+	sketchLine = (startX, endX, startY, endY, color) ->
+
+		ctx = c.getContext("2d")
+		ctx.strokeStyle = color
+		ctx.lineWidth = 1
+		ctx.moveTo startX, startY
+		ctx.lineTo endX, endY
+		ctx.stroke()
+
+	###
 	Draws a line based color connecting the previous move and the most recent move
 	###
 	drawLine = (lineVal, turn) ->
@@ -334,66 +346,36 @@ window.drawVVH = (canvas, moveList) ->
 				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 			else if turn % 2 is 0
 
 				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 			else 
 
 				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 		else if tempBestMoveVal is "tie"
 
@@ -401,43 +383,23 @@ window.drawVVH = (canvas, moveList) ->
 				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 				xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 			else
 				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen - ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 				xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
 				xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
 
-				ctx = c.getContext("2d")
-				ctx.strokeStyle = color
-				ctx.lineWidth = 1
-				ctx.moveTo xstart, ystart
-				ctx.lineTo xend, yend
-				ctx.stroke()
+				sketchLine(xstart, xend, ystart, yend, color)
 
 		else if turn % 2 is 0
 			xstart = horCen + ((maxRemote - prevBestMoveX) * colSpace)
@@ -446,12 +408,7 @@ window.drawVVH = (canvas, moveList) ->
 			xstart = horCen - ((maxRemote - prevBestMoveX) * colSpace)
 			xend = horCen + ((maxRemote - tempBestMoveX) * colSpace)
 
-		ctx = c.getContext("2d")
-		ctx.strokeStyle = color
-		ctx.lineWidth = 1
-		ctx.moveTo xstart, ystart
-		ctx.lineTo xend, yend
-		ctx.stroke()
+		sketchLine(xstart, xend, ystart, yend, color)
 
 
 	###
@@ -474,27 +431,17 @@ window.drawVVH = (canvas, moveList) ->
 
 			while i < turnNum + 1
 
-				setTempSelectedMove(i)			
+				setLineColor(i)			
 				setTempBestMove(i)
 
 				if i isnt 0
-					drawLine(tempSelectedMoveVal, i)
+					drawLine(lineColor, i)
 
 				drawDots(i)
 
 				prevBestMoveX = tempBestMoveX
 				prevBestMoveY = tempBestMoveY
 				prevBestMoveVal = tempBestMoveVal
-
-				console.log "tempSelectedMoveVal " + i + ": " + tempSelectedMoveVal
-
-				console.log "tempBestMoveVal " + i + ": " + tempBestMoveVal
-				console.log "tempBestMoveX " + i + ": " + tempBestMoveX
-				console.log "tempBestMoveY " + i + ": " + tempBestMoveY
-
-				console.log "prevBestMoveVal " + i + ": " + prevBestMoveVal
-				console.log "prevBestMoveX " + i + ": " + prevBestMoveX
-				console.log "prevBestMoveY " + i + ": " + prevBestMoveY
 
 				i += 1
 
