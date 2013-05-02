@@ -10,8 +10,9 @@ window.drawVVH = (canvas, moveList) ->
 	#Move values
 	tempSelectedMoveVal = null
 	tempBestMoveVal = null
+	prevBestMoveVal = null
 
-	#Temporary variables
+	#Temporary parsing variables
 	tempMoveVal = null
 	tempMoveX = null
 	tempMoveY = null
@@ -22,6 +23,7 @@ window.drawVVH = (canvas, moveList) ->
 	horCen = (maxW / 2)
 	tempBestMoveX = null					
 	tempBestMoveY = null					
+	prevBestMoveX = null
 
 	#Grid Spacing
 	colSpace = null				
@@ -237,9 +239,13 @@ window.drawVVH = (canvas, moveList) ->
 				setTempSelectedMove(i)			
 				setTempBestMove(i)
 
-				#drawLine()
+				if i isnt 0
+					#drawLine()
 
-				#drawDot()
+				#drawDots()
+
+				prevBestMoveX = tempBestMoveX
+				prevBestMoveVal = tempBestMoveVal
 
 				console.log "tempSelectedMoveVal " + i + ": " + tempSelectedMoveVal
 				console.log "tempBestMoveVal " + i + ": " + tempBestMoveVal
