@@ -2,7 +2,7 @@
 <game>
   <title>Othello</title>
   <description>
-    Othello is a game that you stuff in.
+    Othello is a 2 player game where players take turns putting discs on the board with their assigned color. The object of the game is to have a majority of the pieces to display your color when the last empty square is filled.
   </description>
   <tags>
     <two-player />
