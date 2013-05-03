@@ -42,9 +42,9 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
         color = "#FFF"
         if char == "X" or char == "x"
-          color = "#F00"
-        else if char == "O" or char == "o"
           color = "#00F"
+        else if char == "O" or char == "o"
+          color = "#F00"
         @canvas.drawRect
           fillStyle: "#7F7F7F"
           strokeStyle: "#000"
