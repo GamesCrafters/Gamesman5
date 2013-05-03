@@ -1,6 +1,6 @@
 window.drawVVH = (canvas, moveList) ->
 
-	console.log moveList
+	#console.log moveList
 	c = canvas
 
 	#Game info
@@ -467,6 +467,10 @@ window.drawVVH = (canvas, moveList) ->
 	###
 	draw = ->
 
+		ctx = c.getContext("2d")
+		ctx.fillStyle = "black"
+		ctx.fillRect 0, 0, maxW, maxH
+
 		setTurnNum();
 
 		# This just ensures that none of this is accessed when the canvas is first created
@@ -495,5 +499,6 @@ window.drawVVH = (canvas, moveList) ->
 
 				i += 1
 
+	draw()
 	draw()
 
