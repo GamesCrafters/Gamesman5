@@ -41,9 +41,11 @@ window.drawVVH = (canvas, moveList) ->
 	#Dot Drawing
 	dotDefault = disTop + 3
 	turnPadding = 25
+	dotSize = 6
 
 	#Line Drawing
 	linePadding = disTop + 2.5
+	lineWidth = 2
 
 	# Colors
 	tieC = "rgb(255, 255, 0)"	# draw yellow
@@ -249,7 +251,7 @@ window.drawVVH = (canvas, moveList) ->
 		xpos = null
 		ypos = dotDefault + (turnPadding * turn)
 		turnRemote = remoteness
-		radius = 4
+		radius = dotSize
 
 		ctx = c.getContext("2d")
 		if value is "win"
@@ -331,7 +333,7 @@ window.drawVVH = (canvas, moveList) ->
 
 		ctx = c.getContext("2d")
 		ctx.strokeStyle = color
-		ctx.lineWidth = 1
+		ctx.lineWidth = lineWidth
 		ctx.moveTo startX, startY
 		ctx.lineTo endX, endY
 		ctx.stroke()
