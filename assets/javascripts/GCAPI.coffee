@@ -30,7 +30,6 @@ window.GCAPI.Game = class Game
     @startBoard = []
     @previousStates = []
     @nextStates = []
-    @turn = 0
     @currentState =
       board:
         board: board
@@ -244,7 +243,6 @@ window.GCAPI.Game = class Game
     @advancePlayer()
     @previousStates.push(@currentState)
     @nextStates = []
-    @turn += 1
     @currentState =
       board: move
     @updateBoard()

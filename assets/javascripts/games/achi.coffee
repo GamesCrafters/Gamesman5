@@ -28,6 +28,8 @@ window.game.getDimensions = (p) ->
 window.game.notifier = class extends GCAPI.GameNotifier
   drawBoard: (board, game) ->
     me = this
+    
+    #get move number
     move_num = 0
     for row in [0..@conf.height-1]
       start = row*@conf.width
@@ -36,7 +38,8 @@ window.game.notifier = class extends GCAPI.GameNotifier
         if board[index] != " "
           move_num++
     console.log move_num
-    console.log me.turn
+    
+    #initial x values
     x_pixels = Math.floor (@canvas.width() / @conf.width)
     y_pixels = Math.floor (@canvas.height() / @conf.height)
     x_offset = .3 * x_pixels
@@ -45,6 +48,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
     ypos = y_offset
     #console.log me.getPlayerName
     
+    #drawing board
     for column in [0..@conf.width-1]
       xpos = @canvas.width()/(@conf.width-1)*column
       if column == 0
@@ -57,7 +61,6 @@ window.game.notifier = class extends GCAPI.GameNotifier
         x1: xpos, y1: y_offset,
         x2: xpos, y2: y_pixels*@conf.height-y_offset,
         layer: true
-    
     for row in [0..@conf.height-1]
       ypos = @canvas.height()/(@conf.height-1)*row
       if row == 0 
@@ -70,7 +73,6 @@ window.game.notifier = class extends GCAPI.GameNotifier
         x1: x_offset, y1: ypos,
         x2: x_pixels*@conf.width-x_offset, y2: ypos,
         layer: true
-     
     @canvas.drawLine
       strokeStyle: "#000",
       strokeWidth: 3,
@@ -84,6 +86,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
       x2: x_offset, y2:y_pixels*@conf.height-y_offset
       layer:true
     
+    #drawing pieces
     for row in [0..@conf.height-1]
       ypos = @canvas.height()/(@conf.height-1)*row
       start = row*@conf.width
@@ -113,7 +116,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
           color = "#F00"
         else if char == "O" or char == "o"
           color = "#00F"
-        if color != "#FFF" && move_num < 6
+        if color != "#FFF"
           @canvas.drawArc
             fillStyle: color
             strokeStyle: "#000"
@@ -121,19 +124,11 @@ window.game.notifier = class extends GCAPI.GameNotifier
             x: xpos , y: ypos 
             radius: x_pixels / 4
             layer: true
-        else if move_num > 5
-          if color == "#F00"
-            @canvas.drawArc
-              fillStyle: "#FFF"
-              strokeStyle: "#000"
-              strokeWidth: 3
-              x: xpos, y: ypos
-              radius: x_pixels / 4
-              layer: true
 
   drawMoves: (data, game) ->
     x_pixels = Math.floor (game.notifier.canvas.width() / game.notifier.conf.width)
     y_pixels = Math.floor (game.notifier.canvas.height() / game.notifier.conf.height)
+    
 
     window.moves = {}
 
@@ -179,6 +174,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
         radius: 10
         click: (layer) ->
           game.makeMove window.moves[layer.name]
+      
 
       if game.showValueMoves
         game.notifier.canvas.drawArc
