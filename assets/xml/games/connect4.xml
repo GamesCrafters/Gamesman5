@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<remote-game>
+  <title>Connect 4</title>
+  <description>
+    When you connect 4 things. A 4 connection has been made
+  </description>
+  <url>http://nyc.cs.berkeley.edu:8080/gcweb/ui/game.jsp?game=connect4</url>
+  <tags>
+    <two-player />
+    <gravity />
+    <solved />
+    <play />
+  </tags>
+</remote-game>
