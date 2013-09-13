@@ -249,7 +249,7 @@ window.drawVVH = (canvas, moveList) ->
 		xpos = null
 		ypos = dotDefault + (turnPadding * turn)
 		turnRemote = remoteness
-		radius = 4
+		radius = 5
 
 		ctx = c.getContext("2d")
 		if value is "win"
@@ -268,7 +268,7 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.fillStyle = color
 			ctx.fill()
 			ctx.lineWidth = 1
-			ctx.strokeStyle = "black"
+			ctx.strokeStyle = color
 			ctx.stroke()
 
 			xpos = horCen - ((maxRemote - turnRemote) * colSpace)
@@ -278,7 +278,7 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.fillStyle = color
 			ctx.fill()
 			ctx.lineWidth = 1
-			ctx.strokeStyle = "black"
+			ctx.strokeStyle = color
 			ctx.stroke()
 
 		else if turn % 2 is 0
@@ -294,7 +294,7 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.fillStyle = color
 			ctx.fill()
 			ctx.lineWidth = 1
-			ctx.strokeStyle = "black"
+			ctx.strokeStyle = color
 			ctx.stroke()
 
 		else
@@ -310,7 +310,7 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.fillStyle = color
 			ctx.fill()
 			ctx.lineWidth = 1
-			ctx.strokeStyle = "black"
+			ctx.strokeStyle = color
 			ctx.stroke()
 
 	###
@@ -467,12 +467,15 @@ window.drawVVH = (canvas, moveList) ->
 	###
 	draw = ->
 
+
+		#if moveList[turnNum].moves.length isnt 0
+
 		ctx = c.getContext("2d")
 		ctx.fillStyle = "black"
 		ctx.fillRect 0, 0, maxW, maxH
 
 		setTurnNum();
-
+		
 		# This just ensures that none of this is accessed when the canvas is first created
 		if moveList[turnNum].moves.length isnt 0
 
@@ -499,6 +502,9 @@ window.drawVVH = (canvas, moveList) ->
 
 				i += 1
 
+	console.log moveList
+
+	#Drawing twice prevents the ghosting piece that appears when undo is pressed and only one draw is used
 	draw()
 	draw()
 
