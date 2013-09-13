@@ -16,9 +16,9 @@
   <div class="nine columns push-three">
     <% @games.each do |resource, parts| %>
       <%
-      game_name = parts[0]
-      description = parts[1]
-      tags = parts[2]
+      game_name = parts[:title]
+      description = parts[:description]
+      tags = parts[:tags]
       if not params[:filter].nil? and params[:filter] != "all"
         if not tags.include?(params[:filter])
           next
@@ -32,8 +32,13 @@
         <div class="nine columns mobile-two">
           <p>
             <h5>
-              <a class="nostyle"
-                 href="/game/<%= resource %>/new"><%= game_name %></a>
+              <% if parts.has_key? :url  %>
+                <a class="nostyle"
+                   href="<%= parts[:url] %>"><%= game_name %></a>
+              <% else %>
+                <a class="nostyle"
+                   href="/game/<%= resource %>/new"><%= game_name %></a>
+              <% end %>
             </h5>
             <%= description %>
           </p>
@@ -42,7 +47,7 @@
           <ul class="link-list">
             <% allTags = allTags.concat(tags) %>
             <% tags.each do |name| %>
-              <li><a href=""><img src="images/<%= name %>.png" /></a></li>
+              <li><a href="/?filter=<%= name %>"><img src="images/<%= name %>.png" /></a></li>
             <% end %>
           </ul>
         </div>
@@ -55,7 +60,7 @@
   <div class="three columns pull-nine">
     <div class="panel">
       <a href="#"><img src="http://nyc.cs.berkeley.edu:8080/gcweb/ui/images/logo.png" /></a>
-      <h5><a href="#">Games</a></h5>
+      <h5><a href="/">Games</a></h5>
       <dl class="vertical tabs">
         <dd <%= 'class="active"' if params[:filter].nil? or params[:filter] == "all" %>>
           <a href="?filter=all">All</a>

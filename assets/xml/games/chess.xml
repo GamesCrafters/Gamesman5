@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<remote-game>
+  <title>Chess</title>
+  <description>
+    Chess! You know chess...
+  </description>
+  <url>http://gamescrafters.berkeley.edu/chess.php</url>
+  <tags>
+    <two-player />
+    <play />
+  </tags>
+</remote-game>

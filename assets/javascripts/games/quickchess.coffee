@@ -20,6 +20,8 @@ window.game.getInitialBoard = (p) ->
     for b in [1..p.height]
       retval += " "
   return retval
+  #game.getStart
+  #return game.startBoard
 
 window.game.getDimensions = (p) ->
   return [p.width, p.height]
@@ -42,9 +44,9 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
         color = "#FFF"
         if char == "X" or char == "x"
-          color = "#00F"
-        else if char == "O" or char == "o"
           color = "#F00"
+        else if char == "O" or char == "o"
+          color = "#00F"
         @canvas.drawRect
           fillStyle: "#7F7F7F"
           strokeStyle: "#000"

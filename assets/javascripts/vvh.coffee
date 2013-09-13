@@ -21,13 +21,13 @@ window.drawVVH = (canvas, moveList) ->
 	maxH = c.height
 	maxW = c.width
 	horCen = (maxW / 2)
-	tempBestMoveX = null					
-	tempBestMoveY = null					
+	tempBestMoveX = null
+	tempBestMoveY = null
 	prevBestMoveX = null
 	prevBestMoveY = null
 
 	#Grid Spacing
-	colSpace = null				
+	colSpace = null
 	rowSpace = null				#determines the spacing of the x-labels on top of grid		
 	padx = 15
 	pady = 5
@@ -100,7 +100,7 @@ window.drawVVH = (canvas, moveList) ->
 		tempMoveVal = moveList[turn].moves[i].value
 		tempMoveX = moveList[turn].moves[i].remoteness
 
-		i += 1;
+		i += 1
 
 		while i < (moveList[turn].moves.length)
 
@@ -167,13 +167,13 @@ window.drawVVH = (canvas, moveList) ->
 	  ctx = c.getContext("2d")
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
-	  ctx.fillStyle = textcolor	
+	  ctx.fillStyle = textcolor
 	  label = maxRemote
 	  i = horCen
 	  j = horCen
 	  ctx.fillText "D", horCen, 10
 	  while label >= 0
-	  	if label % rowSpace is 0 
+	  	if label % rowSpace is 0
 		   	ctx.fillText label, i, xLabelPad
 		   	ctx.fillText label, j, xLabelPad
 	    i += colSpace
@@ -188,7 +188,7 @@ window.drawVVH = (canvas, moveList) ->
 	  ctx = c.getContext("2d")
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
-	  ctx.fillStyle = textcolor	
+	  ctx.fillStyle = textcolor
 	  label = turn + 1
 
 	  ctx.fillText label, pady, yLabelPad + (turn * turnPadding)
@@ -196,7 +196,7 @@ window.drawVVH = (canvas, moveList) ->
 
 	###
 	Draws the gridlines
-	###	
+	###
 	grid = ->
 		i = horCen 					# player 1 half of grid
 		j = horCen 					# player 2 half of grid
@@ -204,7 +204,7 @@ window.drawVVH = (canvas, moveList) ->
 		if maxRemote > 15
 			adjRemote = maxRemote / 10
 			colSpace = (horCen - padx)/adjRemote
-		else 
+		else
 			adjRemote = maxRemote
 		ctx = c.getContext("2d")
 		ctx.strokeStyle = linecolor
@@ -232,7 +232,7 @@ window.drawVVH = (canvas, moveList) ->
 
 			# will calculate the max remoteness from the move list
 			#maxRemote = 9
-			colSpace = (horCen - padx)/maxRemote 
+			colSpace = (horCen - padx)/maxRemote
 			rowSpace = Math.floor(maxRemote/4)
 
 			xlabel()
@@ -256,7 +256,7 @@ window.drawVVH = (canvas, moveList) ->
 			color = winC
 		else if value is "lose"
 			color = loseC
-		else 
+		else
 			color = tieC
 
 		if value is "tie"
@@ -286,7 +286,7 @@ window.drawVVH = (canvas, moveList) ->
 			if value is "lose"
 				xpos = horCen + ((maxRemote - turnRemote) * colSpace)
 
-			else 
+			else
 				xpos = horCen - ((maxRemote - turnRemote) * colSpace)
 
 			ctx.beginPath()
@@ -358,7 +358,7 @@ window.drawVVH = (canvas, moveList) ->
 			color = winC
 		else if lineVal is "lose"
 			color = loseC
-		else 
+		else
 			color = tieC
 
 		if prevBestMoveVal is "tie"
@@ -386,7 +386,7 @@ window.drawVVH = (canvas, moveList) ->
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-			else 
+			else
 
 				xstart = firstPlayerStart
 				xend = secondPlayerEnd
@@ -434,7 +434,7 @@ window.drawVVH = (canvas, moveList) ->
 
 			else if lineVal is "lose" and turn % 2 is 0
 				xstart = firstPlayerStart
-				xend = firstPlayerEnd	
+				xend = firstPlayerEnd
 
 			else
 				xstart = secondPlayerStart
@@ -474,8 +474,13 @@ window.drawVVH = (canvas, moveList) ->
 		ctx.fillStyle = "black"
 		ctx.fillRect 0, 0, maxW, maxH
 
+<<<<<<< HEAD
 		setTurnNum();
 		
+=======
+		setTurnNum()
+
+>>>>>>> origin/master
 		# This just ensures that none of this is accessed when the canvas is first created
 		if moveList[turnNum].moves.length isnt 0
 
@@ -488,7 +493,7 @@ window.drawVVH = (canvas, moveList) ->
 
 			while i < turnNum + 1
 
-				setLineColor(i)			
+				setLineColor(i)
 				setTempBestMove(i)
 
 				if i isnt 0
@@ -507,4 +512,3 @@ window.drawVVH = (canvas, moveList) ->
 	#Drawing twice prevents the ghosting piece that appears when undo is pressed and only one draw is used
 	draw()
 	draw()
-

@@ -27,6 +27,7 @@ window.GCAPI.Game = class Game
     @gameName = name
     @params = parameters
     @notifier = notifierClass
+    @startBoard = []
     @previousStates = []
     @nextStates = []
     @currentState =
@@ -333,8 +334,7 @@ window.GCAPI.Game = class Game
     
   drawArrow: (x, y, len, theta) ->
     $("canvas").drawLine({
-      strokeStyle: "#000",
-      strokeWidth: 1,
+      fillStyle: "#000",
       x1: x, y1: y,
       x2: x + len/6 * Math.sin(theta), y2: y - len/6 * Math.cos(theta),
       x3: x + 2/3*len * Math.cos(theta) + len/6 * Math.sin(theta), y3: y - len/6 * Math.cos(theta) + 2/3 * len * Math.sin(theta),
@@ -344,5 +344,15 @@ window.GCAPI.Game = class Game
       x7: x + 2/3*len*Math.cos(theta), y7: y + 2/3*len*Math.sin(theta),
       x8: x, y8: y
     });
-    
-  
+
+  getStart: () ->
+    console.log("hello")
+    requestUrl = @baseUrl + @gameName + "/getStart"
+    me = @
+    $.ajax requestUrl,
+      dataType: "json"
+      success: (data) ->
+        me.startBoard = data
+        console.log(data)
+      error: (data) ->
+        console.log("Could not get start board.")

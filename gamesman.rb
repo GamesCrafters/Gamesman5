@@ -129,21 +129,31 @@ class Gamesman < Sinatra::Base
       parser = XML::Parser.file(file)
 
       game = parser.parse
+      
+      node = nil
 
-      if !game.find_first('//game/hidden').nil? && params[:admin] != "true"
+      game_object = {}
+      if game.find_first('//game')
+        node = game.find_first('//game')
+      elsif game.find_first('//remote-game')
+        node = game.find_first('//remote-game')
+        game_object[:url] = node.find_first('//url').content
+      end
+
+      if !node.find_first('//hidden').nil? && params[:admin] != "true"
         next
       end
 
-      title = game.find_first('//game/title').content
-      description = game.find_first('//game/description').content
-      tags = []
-      game.find_first('//game/tags').children.each do |child|
+      game_object[:title] = node.find_first('//title').content
+      game_object[:description] = node.find_first('//description').content
+      game_object[:tags] = []
+      node.find_first('//tags').children.each do |child|
         if child.name != 'text' && !child.name.nil? && !child.name.empty?
-          tags << child.name
+          game_object[:tags] << child.name
         end
       end
 
-      @games[asset_name] = [title, description, tags]
+      @games[asset_name] = game_object
     end
     erb :index
   end
