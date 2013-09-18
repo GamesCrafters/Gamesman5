@@ -340,7 +340,7 @@ window.drawVVH = (canvas, moveList) ->
 
 		ctx = c.getContext("2d")
 		ctx.strokeStyle = color
-		ctx.lineWidth = 1
+		ctx.lineWidth = 1.5
 		ctx.moveTo startX, startY
 		ctx.lineTo endX, endY
 		ctx.stroke()
