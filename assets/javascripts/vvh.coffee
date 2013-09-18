@@ -21,13 +21,13 @@ window.drawVVH = (canvas, moveList) ->
 	maxH = c.height
 	maxW = c.width
 	horCen = (maxW / 2)
-	tempBestMoveX = null
-	tempBestMoveY = null
+	tempBestMoveX = null					
+	tempBestMoveY = null					
 	prevBestMoveX = null
 	prevBestMoveY = null
 
 	#Grid Spacing
-	colSpace = null
+	colSpace = null				
 	rowSpace = null				#determines the spacing of the x-labels on top of grid		
 	padx = 15
 	pady = 5
@@ -41,11 +41,9 @@ window.drawVVH = (canvas, moveList) ->
 	#Dot Drawing
 	dotDefault = disTop + 3
 	turnPadding = 25
-	dotSize = 6
 
 	#Line Drawing
 	linePadding = disTop + 2.5
-	lineWidth = 2
 
 	# Colors
 	tieC = "rgb(255, 255, 0)"	# draw yellow
@@ -99,10 +97,11 @@ window.drawVVH = (canvas, moveList) ->
 		console.log moveList
 		###
 
+		
 		tempMoveVal = moveList[turn].moves[i].value
 		tempMoveX = moveList[turn].moves[i].remoteness
 
-		i += 1
+		i += 1;
 
 		while i < (moveList[turn].moves.length)
 
@@ -137,7 +136,12 @@ window.drawVVH = (canvas, moveList) ->
 
 		tempBestMoveX = tempMoveX + 1
 		tempBestMoveVal = tempMoveVal
+
 		
+	setFinalBestMove = ->
+		tempBestMoveX -= 1
+		tempBestMoveVal = "lose"
+
 	###
 	Determines the maximum number of moves until the endgame based on the initial
 	moveList passed in. Add two to the largest value in the initial moveList so
@@ -169,13 +173,13 @@ window.drawVVH = (canvas, moveList) ->
 	  ctx = c.getContext("2d")
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
-	  ctx.fillStyle = textcolor
+	  ctx.fillStyle = textcolor	
 	  label = maxRemote
 	  i = horCen
 	  j = horCen
 	  ctx.fillText "D", horCen, 10
 	  while label >= 0
-	  	if label % rowSpace is 0
+	  	if label % rowSpace is 0 
 		   	ctx.fillText label, i, xLabelPad
 		   	ctx.fillText label, j, xLabelPad
 	    i += colSpace
@@ -190,7 +194,7 @@ window.drawVVH = (canvas, moveList) ->
 	  ctx = c.getContext("2d")
 	  ctx.textBaseline = "middle"
 	  ctx.textAlign = "center"
-	  ctx.fillStyle = textcolor
+	  ctx.fillStyle = textcolor	
 	  label = turn + 1
 
 	  ctx.fillText label, pady, yLabelPad + (turn * turnPadding)
@@ -198,7 +202,7 @@ window.drawVVH = (canvas, moveList) ->
 
 	###
 	Draws the gridlines
-	###
+	###	
 	grid = ->
 		i = horCen 					# player 1 half of grid
 		j = horCen 					# player 2 half of grid
@@ -206,7 +210,7 @@ window.drawVVH = (canvas, moveList) ->
 		if maxRemote > 15
 			adjRemote = maxRemote / 10
 			colSpace = (horCen - padx)/adjRemote
-		else
+		else 
 			adjRemote = maxRemote
 		ctx = c.getContext("2d")
 		ctx.strokeStyle = linecolor
@@ -234,7 +238,7 @@ window.drawVVH = (canvas, moveList) ->
 
 			# will calculate the max remoteness from the move list
 			#maxRemote = 9
-			colSpace = (horCen - padx)/maxRemote
+			colSpace = (horCen - padx)/maxRemote 
 			rowSpace = Math.floor(maxRemote/4)
 
 			xlabel()
@@ -251,18 +255,14 @@ window.drawVVH = (canvas, moveList) ->
 		xpos = null
 		ypos = dotDefault + (turnPadding * turn)
 		turnRemote = remoteness
-<<<<<<< HEAD
 		radius = 5
-=======
-		radius = dotSize
->>>>>>> b54197a8b99deba814d93b1e34dd7cf23a32b10a
 
 		ctx = c.getContext("2d")
 		if value is "win"
 			color = winC
 		else if value is "lose"
 			color = loseC
-		else
+		else 
 			color = tieC
 
 		if value is "tie"
@@ -292,7 +292,7 @@ window.drawVVH = (canvas, moveList) ->
 			if value is "lose"
 				xpos = horCen + ((maxRemote - turnRemote) * colSpace)
 
-			else
+			else 
 				xpos = horCen - ((maxRemote - turnRemote) * colSpace)
 
 			ctx.beginPath()
@@ -319,6 +319,8 @@ window.drawVVH = (canvas, moveList) ->
 			ctx.strokeStyle = color
 			ctx.stroke()
 
+
+
 	###
 	Handles drawing all of the dots necessary for the given turn.
 	###
@@ -327,6 +329,7 @@ window.drawVVH = (canvas, moveList) ->
 		if turn isnt 0
 			drawDot(prevBestMoveX, prevBestMoveVal, turn - 1)
 
+		console.log tempBestMoveX, tempBestMoveVal
 		drawDot(tempBestMoveX, tempBestMoveVal, turn)
 		ylabel(turn)
 
@@ -337,7 +340,7 @@ window.drawVVH = (canvas, moveList) ->
 
 		ctx = c.getContext("2d")
 		ctx.strokeStyle = color
-		ctx.lineWidth = lineWidth
+		ctx.lineWidth = 1
 		ctx.moveTo startX, startY
 		ctx.lineTo endX, endY
 		ctx.stroke()
@@ -364,7 +367,7 @@ window.drawVVH = (canvas, moveList) ->
 			color = winC
 		else if lineVal is "lose"
 			color = loseC
-		else
+		else 
 			color = tieC
 
 		if prevBestMoveVal is "tie"
@@ -392,7 +395,7 @@ window.drawVVH = (canvas, moveList) ->
 
 				sketchLine(xstart, xend, ystart, yend, color)
 
-			else
+			else 
 
 				xstart = firstPlayerStart
 				xend = secondPlayerEnd
@@ -440,7 +443,7 @@ window.drawVVH = (canvas, moveList) ->
 
 			else if lineVal is "lose" and turn % 2 is 0
 				xstart = firstPlayerStart
-				xend = firstPlayerEnd
+				xend = firstPlayerEnd	
 
 			else
 				xstart = secondPlayerStart
@@ -473,28 +476,51 @@ window.drawVVH = (canvas, moveList) ->
 	###
 	draw = ->
 
-
 		#if moveList[turnNum].moves.length isnt 0
-
-		ctx = c.getContext("2d")
-		ctx.fillStyle = "black"
-		ctx.fillRect 0, 0, maxW, maxH
-
-<<<<<<< HEAD
 		setTurnNum();
-		
-=======
-		setTurnNum()
+		console.log moveList[turnNum].board.value
 
->>>>>>> origin/master
-		# This just ensures that none of this is accessed when the canvas is first created
-		if moveList[turnNum].moves.length isnt 0
+		if moveList[turnNum].board.remoteness isnt 0
 
-			#Draw the Grid
+			ctx = c.getContext("2d")
+			ctx.fillStyle = "black"
+			ctx.fillRect 0, 0, maxW, maxH
+
+			# This just ensures that none of this is accessed when the canvas is first created
+			if moveList[turnNum].moves.length isnt 0
+
+				#Draw the Grid
+				maxVal()
+				drawGrid()
+
+				#Redraw the VVH on the grid
+				i = 0
+
+				while i < turnNum + 1
+
+					setLineColor(i)			
+					setTempBestMove(i)
+
+					if i isnt 0
+						drawLine(lineColor, i)
+
+					drawDots(i)
+
+					prevBestMoveX = tempBestMoveX
+					prevBestMoveY = tempBestMoveY
+					prevBestMoveVal = tempBestMoveVal
+
+					i += 1
+
+		else if moveList[turnNum].board.remoteness is 0 and moveList[turnNum - 1].board.remoteness isnt 0
+
+			ctx = c.getContext("2d")
+			ctx.fillStyle = "black"
+			ctx.fillRect 0, 0, maxW, maxH
+
 			maxVal()
 			drawGrid()
 
-			#Redraw the VVH on the grid
 			i = 0
 
 			while i < turnNum + 1
@@ -502,8 +528,11 @@ window.drawVVH = (canvas, moveList) ->
 				setLineColor(i)
 				setTempBestMove(i)
 
+				if i is turnNum
+					setFinalBestMove()
+
 				if i isnt 0
-					drawLine(lineColor, i)
+						drawLine(lineColor, i)
 
 				drawDots(i)
 
@@ -517,4 +546,6 @@ window.drawVVH = (canvas, moveList) ->
 
 	#Drawing twice prevents the ghosting piece that appears when undo is pressed and only one draw is used
 	draw()
+	#console.log 'second draw'
 	draw()
+
