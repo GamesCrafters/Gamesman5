@@ -34,7 +34,9 @@ $.fn.extend
     $('#GCAPI-status').css('width', '100%')
     $('#GCAPI-status').css('height', '20px')
 
-    initialBoard = game.getInitialBoard(params)
+    initialBoard = ""
+    if game.getInitialBoard?
+      initialBoard = game.getInitialBoard(params)
     notify = new game.notifier($(mainCanvas), params)
     window.gameController = new GCAPI.Game(game.asset, params, notify,
                                            initialBoard, coverCanvas,
@@ -43,7 +45,7 @@ $.fn.extend
                                        controlPanel, vvhPanel,
                                        coverCanvas, '#GCAPI-status', this,
                                        GCAPI.getAspectRatio(params))
-    uiController.startGame()
+    window.gameController(uiController.startGame.bind(uiController))
 
 window.ensureGameFunctions = () ->
   problems = []
@@ -52,8 +54,6 @@ window.ensureGameFunctions = () ->
   else
     if !window.game.getDimensions?
       problems.push "You must define a game.getDimensions function in your game file"
-    if !window.game.getInitialBoard?
-      problems.push "You must define a game.getInitialBoard function in your game file"
     if !window.game.notifier?
       problems.push "You must define a game.notifier class in your game file"
   if problems.length > 0
