@@ -27,7 +27,6 @@ window.GCAPI.Game = class Game
     @gameName = name
     @params = parameters
     @notifier = notifierClass
-    @startBoard = []
     @previousStates = []
     @nextStates = []
     @currentState =
@@ -46,10 +45,10 @@ window.GCAPI.Game = class Game
     @baseUrl = "/fake/"
 
   useC: () ->
-    @baseUrl = "http://nyc.cs.berkeley.edu:8081/"
+    @baseUrl = "http://localhost:8081/"
 
   isC: () ->
-    @baseUrl == "http://nyc.cs.berkeley.edu:8081/"
+    @baseUrl == "http://localhost:8081/"
 
   updateSettings: () ->
     @storeGameState()
@@ -345,14 +344,16 @@ window.GCAPI.Game = class Game
       x8: x, y8: y
     });
 
-  getStart: () ->
-    console.log("hello")
+  setup: (callback) ->
     requestUrl = @baseUrl + @gameName + "/getStart"
     me = @
     $.ajax requestUrl,
       dataType: "json"
       success: (data) ->
-        me.startBoard = data
-        console.log(data)
+        me.currentState =
+          board:
+            board: data
+          moves: []
+        callback()
       error: (data) ->
-        console.log("Could not get start board.")
+        alert("Could not get starting board from server.")
