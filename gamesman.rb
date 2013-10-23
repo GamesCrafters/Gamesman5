@@ -11,9 +11,9 @@ class Game < Sinatra::Base
   register Sinatra::AssetPack
 
   assets do
-    serve '/js', :from => '/assets/javascripts'
-    serve '/javascripts', :from => '/assets/javascripts/vendor'
-    serve '/css', :from => '/assets/stylesheets'
+    serve '/js', :from => 'assets/javascripts'
+    serve '/javascripts', :from => 'assets/javascripts/vendor'
+    serve '/css', :from => 'assets/stylesheets'
 
     js :app, [ '/javascripts/jquery-1.8.2.min.js', '/javascripts/modernizr.foundation.js' ]
     js :config, [ '/js/config.js', '/js/GCAPI.js' ]
@@ -34,7 +34,7 @@ class Game < Sinatra::Base
 end
 
 class CoffeeEngine < Sinatra::Base
-  set :views, File.dirname(__FILE__) + '/assets/javascripts/'
+  set :views, File.dirname(__FILE__) + 'assets/javascripts/'
 
   def render_js (name)
     Dir.glob(settings.views + name + "*") do |file|
@@ -57,9 +57,9 @@ class Gamesman < Sinatra::Base
   register Sinatra::AssetPack
 
   assets do
-    serve '/js', :from => '/assets/javascripts'
-    serve '/javascripts', :from => '/assets/javascripts/vendor'
-    serve '/css', :from => '/assets/stylesheets'
+    serve '/js', :from => 'assets/javascripts'
+    serve '/javascripts', :from => 'assets/javascripts/vendor'
+    serve '/css', :from => 'assets/stylesheets'
 
     js :app, [ '/javascripts/jquery-1.8.2.min.js', 
                '/javascripts/modernizr.foundation.js',

@@ -46,10 +46,10 @@ window.GCAPI.Game = class Game
     @baseUrl = "/fake/"
 
   useC: () ->
-    @baseUrl = "http://nyc.cs.berkeley.edu:8081/"
+    @baseUrl = "http://localhost:8081/"
 
   isC: () ->
-    @baseUrl == "http://nyc.cs.berkeley.edu:8081/"
+    @baseUrl == "http://localhost:8081/"
 
   updateSettings: () ->
     @storeGameState()
