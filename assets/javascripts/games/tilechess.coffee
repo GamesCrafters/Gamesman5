@@ -1,32 +1,23 @@
-# title: Tic Tac Toe
-# asset: ttt
-# Tic Tac Toe is a basic game involving some things. these things are important
-# and will play an important role in things.
+# title: Tilechess
+# asset: tilechess
+# Tilechess is a strange variant of chess.
 window.game or= {}
 
-window.game.title = "Tic Tac Toe"
-window.game.asset = "ttt"
-window.game.description = "This is Tic Tac Toe"
+window.game.title = "Tilechess"
+window.game.asset = "tilechess"
+window.game.description = "This is Tilechess"
 window.game.type = "c"
 window.game.parameters = {
-  width: { type: "integer", values: [3,4,5], desc: "Board Width" },
-  height: { type: "integer", values: [3,4,5], desc: "Board Height" },
-  pieces: { type: "integer", values: [3,4,5], desc: "Number in a row" },
+  width: { type: "integer", values: [5], desc: "Board Width" },
+  height: { type: "integer", values: [3], desc: "Board Height" },
 }
 
-window.game.getInitialBoard = (p) ->
-  retval = ""
-  for a in [1..p.width]
-    for b in [1..p.height]
-      retval += " "
-  return retval
 
 window.game.getDimensions = (p) ->
   return [p.width, p.height]
 
 window.game.notifier = class extends GCAPI.GameNotifier
   drawBoard: (board, game) ->
-    console.log 'drawing board'
     me = this
     x_pixels = Math.floor (@canvas.width() / @conf.width)
     y_pixels = Math.floor (@canvas.height() / @conf.height)
@@ -42,10 +33,12 @@ window.game.notifier = class extends GCAPI.GameNotifier
         change = x_pixels * 0.1
 
         color = "#FFF"
-        if char == "X" or char == "x"
+        if char in ['K', 'B']
           color = "#00F"
-        else if char == "O" or char == "o"
+        else if char in ['k', 'b']
           color = "#F00"
+        else
+          console.log char
         @canvas.drawRect
           fillStyle: "#7F7F7F"
           strokeStyle: "#000"
@@ -84,6 +77,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
     window.moves = {}
 
     data = GCAPI.Game.sortMoves(data)
+    console.log 'moves', data
 
     for move in data
       window.moves[move.move] = move

@@ -45,7 +45,7 @@ $.fn.extend
                                        controlPanel, vvhPanel,
                                        coverCanvas, '#GCAPI-status', this,
                                        GCAPI.getAspectRatio(params))
-    window.gameController(uiController.startGame.bind(uiController))
+    window.gameController.setup(uiController.startGame.bind(uiController))
 
 window.ensureGameFunctions = () ->
   problems = []

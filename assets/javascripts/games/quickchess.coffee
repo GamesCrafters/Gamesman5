@@ -1,32 +1,28 @@
-# title: Tic Tac Toe
+# title: Quickchess
 # asset: ttt
-# Tic Tac Toe is a basic game involving some things. these things are important
-# and will play an important role in things.
+# Quickchess is a strange variant of chess.
 window.game or= {}
 
-window.game.title = "Tic Tac Toe"
-window.game.asset = "ttt"
-window.game.description = "This is Tic Tac Toe"
+window.game.title = "Quickchess"
+window.game.asset = "quickchess"
+window.game.description = "This is QuickChess"
 window.game.type = "c"
 window.game.parameters = {
-  width: { type: "integer", values: [3,4,5], desc: "Board Width" },
-  height: { type: "integer", values: [3,4,5], desc: "Board Height" },
-  pieces: { type: "integer", values: [3,4,5], desc: "Number in a row" },
+  width: { type: "integer", values: [3], desc: "Board Width" },
+  height: { type: "integer", values: [4], desc: "Board Height" },
 }
-
-window.game.getInitialBoard = (p) ->
-  retval = ""
-  for a in [1..p.width]
-    for b in [1..p.height]
-      retval += " "
-  return retval
-  #game.getStart
-  #return game.startBoard
 
 window.game.getDimensions = (p) ->
   return [p.width, p.height]
 
 window.game.notifier = class extends GCAPI.GameNotifier
+  pieceMap:
+    'K': 'Chess_kdt45.svg'
+    'k': 'Chess_klt45.svg'
+    'Q': 'Chess_qdt45.svg'
+    'q': 'Chess_qlt45.svg'
+    'R': 'Chess_rdt45.svg'
+    'r': 'Chess_rlt45.svg'
   drawBoard: (board, game) ->
     me = this
     x_pixels = Math.floor (@canvas.width() / @conf.width)
@@ -42,11 +38,11 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
         change = x_pixels * 0.1
 
-        color = "#FFF"
-        if char == "X" or char == "x"
-          color = "#F00"
-        else if char == "O" or char == "o"
-          color = "#00F"
+        #color = "#FFF"
+        #if char in ['Q', 'K', 'R']
+          #color = "#F00"
+        #else if char in ['q', 'k', 'r']
+          #color = "#00F"
         @canvas.drawRect
           fillStyle: "#7F7F7F"
           strokeStyle: "#000"
@@ -56,24 +52,58 @@ window.game.notifier = class extends GCAPI.GameNotifier
           height: y_pixels
           fromCenter: false
           layer: true
-        if color == "#F00"
-          @canvas.drawRect
-            fillStyle: color
-            strokeStyle: "#000"
-            strokeWidth: 3
-            x: xpos + change, y: ypos + change
-            width: x_pixels - (change * 2)
-            height: y_pixels - (change * 2)
-            fromCenter: false
-            layer: true
-        else if color == "#00F"
-          @canvas.drawArc
-            fillStyle: color
-            strokeStyle: "#000"
-            strokeWidth: 3
-            x: xpos + (x_pixels / 2), y: ypos + (y_pixels / 2)
-            radius: (x_pixels / 2) - change
-            layer: true
+        #console.log 'Canvas:', @canvas
+        img = new Image()
+        func = ((xpos, ypos) -> () ->
+          console.log 'Drawing image at', xpos, ypos
+          #console.log me.canvas.drawImage
+          #me.canvas.drawImage
+          #me.canvas.drawRect
+            #fillStyle: color
+            #strokeStyle: "#000"
+            #strokeWidth: 3
+            #x: xpos + change, y: ypos + change
+            #width: x_pixels - (change * 2)
+            #height: y_pixels - (change * 2)
+            #fromCenter: false
+            #layer: true
+          #console.log me.canvas.drawImage
+          document.getElementById('GCAPI-main').getContext('2d').drawImage(img, xpos + change, ypos + change, x_pixels - (change * 2), y_pixels - (change * 2))
+          #me.canvas.drawImage img, xpos + change, ypos + change
+          #console.log 'Output =', out
+          #me.canvas.drawRect
+            #img: img,
+            #x: xpos + change, y: ypos + change
+            #width: x_pixels - (change * 2)
+            #height: y_pixels - (change * 2)
+            #fromCenter: false
+            #layer: true
+          )(xpos, ypos)
+        img.onload = func
+          #me.canvas.getContext('2d').drawImage(img, xpos, ypos, x_pixels - (change * 2), y_pixels - (change * 2))
+        #img.src = '/images/Chess_symbols.PNG'
+        src = '/images/chess_pieces/' + @pieceMap[char]
+        console.log 'Drawing image' + src
+        img.src = '/images/chess_pieces/' + @pieceMap[char]
+        #console.log @canvas.drawRect
+        #if false && color == "#F00"
+          #@canvas.drawRect
+            #fillStyle: color
+            #strokeStyle: "#000"
+            #strokeWidth: 3
+            #x: xpos + change, y: ypos + change
+            #width: x_pixels - (change * 2)
+            #height: y_pixels - (change * 2)
+            #fromCenter: false
+            #layer: true
+        #else if false && color == "#00F"
+          #@canvas.drawArc
+            #fillStyle: color
+            #strokeStyle: "#000"
+            #strokeWidth: 3
+            #x: xpos + (x_pixels / 2), y: ypos + (y_pixels / 2)
+            #radius: (x_pixels / 2) - change
+            #layer: true
 
         xpos += x_pixels
       ypos += y_pixels
@@ -85,6 +115,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
     window.moves = {}
 
     data = GCAPI.Game.sortMoves(data)
+    #console.log 'moves', data
 
     for move in data
       window.moves[move.move] = move
@@ -92,7 +123,7 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
       if game.showValueMoves
         color = game.getColor(move, data)
-        console.log color
+        #console.log color
 
       column = row = 0
       if game.isC()

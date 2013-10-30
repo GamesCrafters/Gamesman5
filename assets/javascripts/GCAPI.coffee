@@ -33,7 +33,7 @@ window.GCAPI.Game = class Game
       board:
         board: board
       moves: []
-    @baseUrl = "http://nyc.cs.berkeley.edu:8080/gcweb/service/gamesman/puzzles/"
+    @baseUrl = "http://localhost:8081/"
     @showValueMoves = false
     @currentPlayer = 0
     if @params["fake"]
@@ -293,7 +293,7 @@ window.GCAPI.Game = class Game
           m.value = "win"
       m
     moves = (fixMove(m) for m in moves)
-    console.log moves
+    #console.log moves
     moves
 
   finishBoardUpdate: () ->
@@ -312,6 +312,8 @@ window.GCAPI.Game = class Game
 
       @currentState.moves = @newMoves.response
       @notifier.drawMoves(@fixMoves(@newMoves.response, @), @)
+    else
+      alert ( "Request to server failed." )
     @drawVVH()
     if @getPlayerType() == "computer"
       me = @
@@ -350,10 +352,15 @@ window.GCAPI.Game = class Game
     $.ajax requestUrl,
       dataType: "json"
       success: (data) ->
-        me.currentState =
-          board:
-            board: data
-          moves: []
-        callback()
+        console.log data
+        if data.status == "ok"
+          me.currentState =
+            board:
+              board: data['response']
+            moves: []
+          console.log "current state =", me.currentState
+          callback()
+        else
+          alert("Could not get starting board from server.")
       error: (data) ->
         alert("Could not get starting board from server.")

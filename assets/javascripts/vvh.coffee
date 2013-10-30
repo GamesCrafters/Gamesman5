@@ -478,7 +478,7 @@ window.drawVVH = (canvas, moveList) ->
 
 		#if moveList[turnNum].moves.length isnt 0
 		setTurnNum();
-		console.log moveList[turnNum].board.value
+		#console.log moveList[turnNum].board.value
 
 		if moveList[turnNum].board.remoteness isnt 0
 
@@ -542,10 +542,9 @@ window.drawVVH = (canvas, moveList) ->
 
 				i += 1
 
-	console.log moveList
+	#console.log moveList
 
 	#Drawing twice prevents the ghosting piece that appears when undo is pressed and only one draw is used
 	draw()
 	#console.log 'second draw'
 	draw()
-
