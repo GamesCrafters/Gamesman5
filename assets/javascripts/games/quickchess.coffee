@@ -16,13 +16,13 @@ window.game.getDimensions = (p) ->
   return [p.width, p.height]
 
 window.game.notifier = class extends GCAPI.GameNotifier
-  pieceMap:
-    'K': 'Chess_kdt45.svg'
-    'k': 'Chess_klt45.svg'
-    'Q': 'Chess_qdt45.svg'
-    'q': 'Chess_qlt45.svg'
-    'R': 'Chess_rdt45.svg'
-    'r': 'Chess_rlt45.svg'
+  pieceImgSources:
+    'k': 'Chess_kdt45.svg'
+    'K': 'Chess_klt45.svg'
+    'q': 'Chess_qdt45.svg'
+    'Q': 'Chess_qlt45.svg'
+    'r': 'Chess_rdt45.svg'
+    'R': 'Chess_rlt45.svg'
   drawBoard: (board, game) ->
     me = this
     x_pixels = Math.floor (@canvas.width() / @conf.width)
@@ -38,11 +38,6 @@ window.game.notifier = class extends GCAPI.GameNotifier
 
         change = x_pixels * 0.1
 
-        #color = "#FFF"
-        #if char in ['Q', 'K', 'R']
-          #color = "#F00"
-        #else if char in ['q', 'k', 'r']
-          #color = "#00F"
         @canvas.drawRect
           fillStyle: "#7F7F7F"
           strokeStyle: "#000"
@@ -52,58 +47,17 @@ window.game.notifier = class extends GCAPI.GameNotifier
           height: y_pixels
           fromCenter: false
           layer: true
-        #console.log 'Canvas:', @canvas
-        img = new Image()
-        func = ((xpos, ypos) -> () ->
-          console.log 'Drawing image at', xpos, ypos
-          #console.log me.canvas.drawImage
-          #me.canvas.drawImage
-          #me.canvas.drawRect
-            #fillStyle: color
-            #strokeStyle: "#000"
-            #strokeWidth: 3
-            #x: xpos + change, y: ypos + change
-            #width: x_pixels - (change * 2)
-            #height: y_pixels - (change * 2)
-            #fromCenter: false
-            #layer: true
-          #console.log me.canvas.drawImage
-          document.getElementById('GCAPI-main').getContext('2d').drawImage(img, xpos + change, ypos + change, x_pixels - (change * 2), y_pixels - (change * 2))
-          #me.canvas.drawImage img, xpos + change, ypos + change
-          #console.log 'Output =', out
-          #me.canvas.drawRect
-            #img: img,
-            #x: xpos + change, y: ypos + change
-            #width: x_pixels - (change * 2)
-            #height: y_pixels - (change * 2)
-            #fromCenter: false
-            #layer: true
-          )(xpos, ypos)
-        img.onload = func
-          #me.canvas.getContext('2d').drawImage(img, xpos, ypos, x_pixels - (change * 2), y_pixels - (change * 2))
-        #img.src = '/images/Chess_symbols.PNG'
-        src = '/images/chess_pieces/' + @pieceMap[char]
-        console.log 'Drawing image' + src
-        img.src = '/images/chess_pieces/' + @pieceMap[char]
-        #console.log @canvas.drawRect
-        #if false && color == "#F00"
-          #@canvas.drawRect
-            #fillStyle: color
-            #strokeStyle: "#000"
-            #strokeWidth: 3
-            #x: xpos + change, y: ypos + change
-            #width: x_pixels - (change * 2)
-            #height: y_pixels - (change * 2)
-            #fromCenter: false
-            #layer: true
-        #else if false && color == "#00F"
-          #@canvas.drawArc
-            #fillStyle: color
-            #strokeStyle: "#000"
-            #strokeWidth: 3
-            #x: xpos + (x_pixels / 2), y: ypos + (y_pixels / 2)
-            #radius: (x_pixels / 2) - change
-            #layer: true
+        piece_image = @pieceImgSources[char]
+        if piece_image
+          src = '/images/chess_pieces/' + piece_image
+          @canvas.drawImage
+            source: src
+            x: xpos + change
+            y: ypos + change
+            width: x_pixels - (change * 2)
+            height: y_pixels - (change * 2)
+            fromCenter: false
+            layer: true
 
         xpos += x_pixels
       ypos += y_pixels
@@ -115,44 +69,84 @@ window.game.notifier = class extends GCAPI.GameNotifier
     window.moves = {}
 
     data = GCAPI.Game.sortMoves(data)
-    #console.log 'moves', data
+
+    columnMap =
+      'a': 1
+      'b': 2
+      'c': 3
+    rotateMap =
+      '1,1' : -45 - 180
+      '2,2' : -45 - 180
+      '3,3' : -45 - 180
+      '4,4' : -45 - 180
+      '-1,-1' : 45
+      '-2,-2' : 45
+      '-3,-3' : 45
+      '-4,-4' : 45
+      '-1,1' : 45
+      '-2,2' : 45
+      '-3,3' : 45
+      '-4,4' : 45
+      '1,-1' : 45
+      '2,-2' : 45
+      '3,-3' : 45
+      '4,-4' : 45
+      '1,0' : 90
+      '2,0' : 90
+      '3,0' : 90
+      '4,0' : 90
+      '-1,0' : -90
+      '-2,0' : -90
+      '-3,0' : -90
+      '-4,0' : -90
+      '0,1' : -180
+      '0,2' : -180
+      '0,3' : -180
+      '0,4' : -180
+      '0,-1' : 0
+      '0,-2' : 0
+      '0,-3' : 0
+      '0,-4' : 0
 
     for move in data
       window.moves[move.move] = move
       color = "#FFF"
-
-      if game.showValueMoves
+      if game.showValueMoves or true
         color = game.getColor(move, data)
-        #console.log color
-
-      column = row = 0
-      if game.isC()
-        val = parseInt(move.move) - 1
-        column = val % 3
-        row = Math.floor(val / 3)
-      else
-        column = move.move.charCodeAt(0) - 65
-        row = move.move[1] - 1
-
-      xpos = x_pixels * column
-      ypos = y_pixels * row
-
-      game.notifier.canvas.drawRect
+      start_column = columnMap[move.move[0]] - 1
+      start_row = @conf.height - parseInt(move.move[1])
+      end_column = columnMap[move.move[2]] - 1
+      end_row = @conf.height - parseInt(move.move[3])
+      x_start = x_pixels * (start_column + 0.5)
+      y_start = y_pixels * (start_row + 0.5)
+      x_end = x_pixels * (end_column + 0.5)
+      y_end = y_pixels * (end_row + 0.5)
+      triangle_radius = x_pixels / 16
+      @canvas.drawLine
+        strokeStyle: color
+        strokeWidth: 10
+        x1: x_start
+        y1: y_start
+        x2: x_end
+        y2: y_end
         layer: true
         name: move.move
-        fillStyle: "#7F7F7F"
-        strokeStyle: "#000"
-        strokeWidth: 3
-        x: xpos, y: ypos
-        width: x_pixels
-        height: y_pixels
-        fromCenter: false
         click: (layer) ->
           game.makeMove window.moves[layer.name]
-
-      if game.showValueMoves
-        game.notifier.canvas.drawArc
-          fillStyle: color
-          x: xpos + (x_pixels / 2), y: ypos + (y_pixels / 2)
-          radius: (x_pixels / 5)
-          layer: true
+      x_diff = end_column - start_column
+      y_diff = end_row - start_row
+      angle = rotateMap[x_diff + "," + y_diff]
+      console.log "Diff = (" + x_diff + ", " + y_diff + ")"
+      console.log "Angle = " + angle
+      @canvas.drawPolygon
+        strokeStyle: color
+        strokeWidth: 10
+        x: x_end
+        y: y_end
+        radius: x_pixels / 16
+        sides: 3
+        rotate: angle
+        layer: true
+        name: move.move
+        click: (layer) ->
+          game.makeMove window.moves[layer.name]
