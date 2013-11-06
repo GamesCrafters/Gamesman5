@@ -83,10 +83,10 @@ window.game.notifier = class extends GCAPI.GameNotifier
       '-2,-2' : 45
       '-3,-3' : 45
       '-4,-4' : 45
-      '-1,1' : 45
-      '-2,2' : 45
-      '-3,3' : 45
-      '-4,4' : 45
+      '-1,1' : -45 - 90
+      '-2,2' : -45 - 90
+      '-3,3' : -45 - 90
+      '-4,4' : -45 - 90
       '1,-1' : 45
       '2,-2' : 45
       '3,-3' : 45
@@ -122,31 +122,41 @@ window.game.notifier = class extends GCAPI.GameNotifier
       x_end = x_pixels * (end_column + 0.5)
       y_end = y_pixels * (end_row + 0.5)
       triangle_radius = x_pixels / 16
-      @canvas.drawLine
-        strokeStyle: color
-        strokeWidth: 10
-        x1: x_start
-        y1: y_start
-        x2: x_end
-        y2: y_end
-        layer: true
-        name: move.move
-        click: (layer) ->
-          game.makeMove window.moves[layer.name]
       x_diff = end_column - start_column
       y_diff = end_row - start_row
       angle = rotateMap[x_diff + "," + y_diff]
       console.log "Diff = (" + x_diff + ", " + y_diff + ")"
       console.log "Angle = " + angle
-      @canvas.drawPolygon
+      #x_start = x_end
+      #y_start = y_end
+      #x_diff = 1
+      #y_diff = 1
+      x_len = x_diff * x_pixels
+      y_len = y_diff * y_pixels
+      theta = (angle - 90) * Math.PI / 180
+      len = Math.sqrt(x_len * x_len + y_len * y_len)
+      #len = Math.sqrt(x_pixels * x_pixels + y_pixels * y_pixels)
+      #x = x_end + x_diff / x_diff
+      #x = (x_end + x_diff / x_diff)
+      #y = (y_end + y_diff / y_diff)
+      #y = y_end - x_pixels
+      #y = y_start + y_start / y_start
+      #x = x_end - x_len * Math.sign(x_diff)
+      #y = y_end - y_len * Math.sign(y_diff)
+      x = x_start
+      y = y_start
+      @canvas.drawLine
         strokeStyle: color
-        strokeWidth: 10
-        x: x_end
-        y: y_end
-        radius: x_pixels / 16
-        sides: 3
-        rotate: angle
+        fillStyle: color
         layer: true
         name: move.move
         click: (layer) ->
           game.makeMove window.moves[layer.name]
+        x1: x, y1: y,
+        x2: x + len/6 * Math.sin(theta), y2: y - len/6 * Math.cos(theta),
+        x3: x + 2/3*len * Math.cos(theta) + len/6 * Math.sin(theta), y3: y - len/6 * Math.cos(theta) + 2/3 * len * Math.sin(theta),
+        x4: x + 2/3*len*Math.cos(theta) + len/3*Math.sin(theta), y4: y - len/3*Math.cos(theta) + 2/3*len*Math.sin(theta),
+        x5: x + len*Math.cos(theta) + len/12*Math.sin(theta), y5: y - len/12*Math.cos(theta) + len*Math.sin(theta), 
+        x6: x + 2/3*len*Math.cos(theta) - len/6*Math.sin(theta), y6: y + len/6*Math.cos(theta) + 2/3*len*Math.sin(theta),
+        x7: x + 2/3*len*Math.cos(theta), y7: y + 2/3*len*Math.sin(theta),
+        x8: x, y8: y

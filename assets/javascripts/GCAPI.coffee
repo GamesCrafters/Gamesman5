@@ -361,6 +361,7 @@ window.GCAPI.Game = class Game
           console.log "current state =", me.currentState
           callback()
         else
-          alert("Could not get starting board from server.")
+          me.setup (callback)
+          #alert("Could not get starting board from server.")
       error: (data) ->
         alert("Could not get starting board from server.")
