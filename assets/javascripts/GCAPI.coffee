@@ -362,6 +362,5 @@ window.GCAPI.Game = class Game
           callback()
         else
           me.setup (callback)
-          #alert("Could not get starting board from server.")
       error: (data) ->
-        alert("Could not get starting board from server.")
+        me.setup (callback)
