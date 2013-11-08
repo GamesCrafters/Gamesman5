@@ -131,21 +131,22 @@ window.game.notifier = class extends GCAPI.GameNotifier
       x_len = x_diff * x_pixels
       y_len = y_diff * y_pixels
       theta = (angle - 90) * Math.PI / 180
-      len = Math.sqrt(x_pixels * x_pixels + y_pixels * y_pixels) * 0.7
+      magic = 0.7 # Used to add spacing, etc.
+      len = Math.sqrt(x_pixels * x_pixels + y_pixels * y_pixels) * magic
       x = x_end + Math.sin(theta) * x_pixels
       y = y_end + Math.cos(theta) * y_pixels
       if x_diff == 0
-        y = y_end - y_pixels * Math.sign(y_diff)
+        y = y_end - y_pixels * Math.sign(y_diff) * magic
         x = x_end
       if y_diff == 0
         y = y_end
-        x = x_end - x_pixels * Math.sign(x_diff)
-      if x_diff > 0 and y_diff > 0
-        x = x_end - x_pixels * Math.sign(x_diff)
-        y = y_end - y_pixels * Math.sign(y_diff)
-      if x_diff < 0 and y_diff < 0
-        x = x_end - x_pixels * Math.sign(x_diff)
-        y = y_end - y_pixels * Math.sign(y_diff)
+        x = x_end - x_pixels * Math.sign(x_diff) * magic
+      else if x_diff > 0 and y_diff > 0
+        x = x_end - x_pixels * Math.sign(x_diff) * magic
+        y = y_end - y_pixels * Math.sign(y_diff) * magic
+      else
+        x = x_end - x_pixels * Math.sign(x_diff) * magic
+        y = y_end - y_pixels * Math.sign(y_diff) * magic
       @canvas.drawLine
         strokeStyle: color
         fillStyle: color
