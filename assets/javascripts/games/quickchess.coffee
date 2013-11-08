@@ -74,15 +74,16 @@ window.game.notifier = class extends GCAPI.GameNotifier
       'a': 1
       'b': 2
       'c': 3
+
     rotateMap =
       '1,1' : -45 - 180
       '2,2' : -45 - 180
       '3,3' : -45 - 180
       '4,4' : -45 - 180
-      '-1,-1' : 45
-      '-2,-2' : 45
-      '-3,-3' : 45
-      '-4,-4' : 45
+      '-1,-1' : 45 - 90
+      '-2,-2' : 45 - 90
+      '-3,-3' : 45 - 90
+      '-4,-4' : 45 - 90
       '-1,1' : -45 - 90
       '-2,2' : -45 - 90
       '-3,3' : -45 - 90
@@ -127,24 +128,24 @@ window.game.notifier = class extends GCAPI.GameNotifier
       angle = rotateMap[x_diff + "," + y_diff]
       console.log "Diff = (" + x_diff + ", " + y_diff + ")"
       console.log "Angle = " + angle
-      #x_start = x_end
-      #y_start = y_end
-      #x_diff = 1
-      #y_diff = 1
       x_len = x_diff * x_pixels
       y_len = y_diff * y_pixels
       theta = (angle - 90) * Math.PI / 180
-      len = Math.sqrt(x_len * x_len + y_len * y_len)
-      #len = Math.sqrt(x_pixels * x_pixels + y_pixels * y_pixels)
-      #x = x_end + x_diff / x_diff
-      #x = (x_end + x_diff / x_diff)
-      #y = (y_end + y_diff / y_diff)
-      #y = y_end - x_pixels
-      #y = y_start + y_start / y_start
-      #x = x_end - x_len * Math.sign(x_diff)
-      #y = y_end - y_len * Math.sign(y_diff)
-      x = x_start
-      y = y_start
+      len = Math.sqrt(x_pixels * x_pixels + y_pixels * y_pixels) * 0.7
+      x = x_end + Math.sin(theta) * x_pixels
+      y = y_end + Math.cos(theta) * y_pixels
+      if x_diff == 0
+        y = y_end - y_pixels * Math.sign(y_diff)
+        x = x_end
+      if y_diff == 0
+        y = y_end
+        x = x_end - x_pixels * Math.sign(x_diff)
+      if x_diff > 0 and y_diff > 0
+        x = x_end - x_pixels * Math.sign(x_diff)
+        y = y_end - y_pixels * Math.sign(y_diff)
+      if x_diff < 0 and y_diff < 0
+        x = x_end - x_pixels * Math.sign(x_diff)
+        y = y_end - y_pixels * Math.sign(y_diff)
       @canvas.drawLine
         strokeStyle: color
         fillStyle: color
